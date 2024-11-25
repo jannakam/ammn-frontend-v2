@@ -77,3 +77,26 @@ export const transfer = async (formData, username) => {
     return false;
   }
 };
+
+export const salifny = async (formData, username) => {
+  const userData = Object.fromEntries(formData);
+
+  try {
+    const response = await fetch(
+      `${baseUrl}/mini-project/api/transactions/transfer/${username}`,
+      {
+        method: "PUT",
+        headers: await getHeaders(),
+        body: JSON.stringify(userData),
+      }
+    );
+
+    revalidatePath("/dashboard");
+    revalidatePath("/dashboard/transactions");
+    revalidatePath("/users");
+    return response.ok;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
