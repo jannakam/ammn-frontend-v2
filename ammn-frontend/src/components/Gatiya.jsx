@@ -45,7 +45,7 @@ export function Gatiya() {
                 Balance: {gatiya.remaining} / {gatiya.initial} KWD
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex items-center justify-between gap-4">
+            <CardContent className="flex items-end justify-between gap-4">
               {/* Avatar Group */}
               <div className="flex -space-x-3 [&>*]:ring [&>*]:ring-background">
                 {gatiya.people.map((src, i) => (
@@ -55,7 +55,9 @@ export function Gatiya() {
                 ))}
               </div>
               {/* Created By */}
-              <p className="text-sm text-muted-foreground">Created By: {gatiya.created}</p>
+                <p className="text-sm text-muted-foreground">
+                    Created By: <span className="text-destructive font-semibold">{gatiya.created}</span>
+                </p>
             </CardContent>
           </Card>
         ))}

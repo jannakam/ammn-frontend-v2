@@ -19,7 +19,7 @@ export function ThemeSwitcher() {
   }
 
   return (
-    <div className="flex items-center space-x-2 fixed top-5 left-5">
+    <div className="flex items-center space-x-2 fixed top-8 left-8">
       <Switch
         id="dark-mode"
         checked={theme === "dark"}

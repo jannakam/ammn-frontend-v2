@@ -5,78 +5,80 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 224 71.4% 4.1%;
-    --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
-    --primary: 220.9 39.3% 11%;
-    --primary-foreground: 210 20% 98%;
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 224 71.4% 4.1%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --background: 34 28% 87%; /* #E0D0BD */
+    --foreground: 158 12% 14%; /* Black for light mode (Main titles, forms, etc.) */
+    --card: 34 28% 87%; /* Same as background */
+    --card-foreground: 0 0% 0%; /* #222B29 */
+    --popover: 34 28% 87%; /* Same as background */
+    --popover-foreground: 158 12% 14%; /* Same as foreground */
+    --primary: 158 12% 14%; /* #222B29 */
+    --primary-foreground: 34 28% 87%; /* #E0D0BD */
+    --secondary: 34 25% 80%; /* Muted background for light mode */
+    --secondary-foreground: 158 12% 14%; /* Muted text */
+    --muted: 34 25% 80%; /* Slightly lighter than background */
+    --muted-foreground: 158 10% 44%; /* Desaturated dark */
+    --accent: 168 34% 60%; /* Adjusted shade for #66B5A5 */
+    --accent-foreground: 158 12% 14%; /* Dark text for accent */
+    --destructive: 348 65% 61%; /* Exact #EF5A6F */
+    --destructive-foreground: 34 28% 87%; /* Light text for destructive */
+    --border: 34 20% 75%; /* Softer border */
+    --input: 34 20% 75%; /* Same as border */
+    --ring: 158 12% 14%; /* Dark color for focus rings */
+    --chart-1: 348 65% 61%; /* #EF5A6F */
+    --chart-2: 168 34% 60%; /* #66B5A5 */
+    --chart-3: 34 25% 50%; /* Mid-tone */
+    --chart-4: 35 75% 65%; /* A yellow tone for variety */
+    --chart-5: 210 70% 40%; /* Cool blue for balance */
     --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 34 28% 87%; /* Light background */
+    --sidebar-foreground: 158 12% 14%; /* Dark text */
+    --sidebar-primary: 168 34% 60%; /* Accent for primary */
+    --sidebar-primary-foreground: 34 28% 87%; /* Light text */
+    --sidebar-accent: 34 25% 80%; /* Muted background */
+    --sidebar-accent-foreground: 158 12% 14%; /* Muted text */
+    --sidebar-border: 34 20% 75%;
+    --sidebar-ring: 168 34% 60%; /* Accent */
   }
+
   .dark {
-    --background: 224 71.4% 4.1%;
-    --foreground: 210 20% 98%;
-    --card: 224 71.4% 4.1%;
-    --card-foreground: 210 20% 98%;
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
-    --primary: 210 20% 98%;
-    --primary-foreground: 220.9 39.3% 11%;
-    --secondary: 215 27.9% 16.9%;
-    --secondary-foreground: 210 20% 98%;
-    --muted: 215 27.9% 16.9%;
-    --muted-foreground: 217.9 10.6% 64.9%;
-    --accent: 215 27.9% 16.9%;
-    --accent-foreground: 210 20% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
-    --ring: 216 12.2% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 158 12% 14%; /* #222B29 */
+    --foreground: 34 28% 87%; /* White for dark mode (Main titles, forms, etc.) */
+    --card: 158 12% 14%; /* Same as background */
+    --card-foreground: 0 0% 100%; /* #E0D0BD */
+    --popover: 158 12% 14%; /* Same as background */
+    --popover-foreground: 34 28% 87%; /* Same as foreground */
+    --primary: 34 28% 87%; /* #E0D0BD */
+    --primary-foreground: 158 12% 14%; /* #222B29 */
+    --secondary: 158 15% 18%; /* Slightly lighter dark */
+    --secondary-foreground: 34 28% 87%; /* Muted text */
+    --muted: 158 17% 20%; /* Slightly muted dark */
+    --muted-foreground: 34 25% 78%; /* Desaturated light */
+    --accent: 168 34% 50%; /* Slightly darker #66B5A5 */
+    --accent-foreground: 34 28% 87%; /* Light text for accent */
+    --destructive: 348 65% 61%; /* Exact #EF5A6F */
+    --destructive-foreground: 34 28% 87%; /* Light text for destructive */
+    --border: 158 15% 18%; /* Soft border */
+    --input: 158 15% 18%; /* Same as border */
+    --ring: 34 28% 87%; /* Light color for focus rings */
+    --chart-1: 348 65% 61%; /* #EF5A6F */
+    --chart-2: 168 34% 50%; /* #66B5A5 */
+    --chart-3: 158 20% 50%; /* Mid-tone */
+    --chart-4: 35 75% 65%; /* A yellow tone for variety */
+    --chart-5: 210 70% 40%; /* Cool blue for balance */
+    --sidebar-background: 158 12% 14%; /* Dark background */
+    --sidebar-foreground: 34 28% 87%; /* Light text */
+    --sidebar-primary: 348 65% 61%; /* Destructive for primary */
+    --sidebar-primary-foreground: 158 12% 14%; /* Dark text */
+    --sidebar-accent: 158 15% 18%; /* Muted background */
+    --sidebar-accent-foreground: 34 28% 87%; /* Muted text */
+    --sidebar-border: 158 15% 18%;
+    --sidebar-ring: 34 28% 87%; /* Light */
   }
 }
+
+
 
 @layer base {
   * {
@@ -174,7 +176,7 @@ body {
     font-size: 3em;
 }
 .banner .content .model{
-    background-image: url('/gradient.png');
+    background-image: url('/wallet.png');
     width: 100%;
     height: 85vh;
     position: absolute;
@@ -228,3 +230,68 @@ body {
         font-size: 5em;
     }
 }
+
+/* GRADIENT EFFECT  */
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.gradient {
+  --size: 750px;
+  --speed: 50s;
+  --easing: cubic-bezier(0.8, 0.2, 0.2, 0.8);
+
+  position: fixed; /* Ensures it's behind content */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1; /* Places it behind everything else */
+  inset:0;
+  
+  width: var(--size);
+  height: var(--size);
+  filter: blur(calc(var(--size) / 5));
+  background-image: linear-gradient(hsl(164, 34%, 65%, 100%), hsl(168, 71%, 65%));
+  animation: rotate var(--speed) var(--easing) alternate infinite;
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+}
+
+@media (min-width: 720px) {
+  .gradient {
+    --size: 500px;
+  }
+}
+
+* {
+  transition: all 0.5s ease-out;
+}
+
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #FFF;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  }
+
+  @keyframes rotation {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+  } 
+  
+
+  
