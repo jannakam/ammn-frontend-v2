@@ -1,11 +1,18 @@
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import Image from "next/image";
-import LoginForm from "@/components/LoginForm";
+import LoginSection from "@/components/LoginSection";
+import Footer from "@/components/Footer";
+import { Logo } from "@/components/Logo";
+import AuthSection from "@/components/AuthSection";
+import HeroSection from "@/components/HeroSection";
 
 export default function Home() {
   return (
     <div>
-      <LoginForm />
+      <Logo />
+      {/* <AuthSection /> */}
+      <HeroSection />
+      <Footer />
     </div>
   );
 }

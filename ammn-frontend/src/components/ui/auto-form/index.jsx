@@ -22,7 +22,7 @@ export function AutoFormSubmit({
   );
 }
 
-function AutoForm(
+export function AutoForm(
   {
     formSchema,
     values: valuesProp,
@@ -91,4 +91,3 @@ function AutoForm(
   );
 }
 
-export default AutoForm;

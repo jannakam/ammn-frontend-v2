@@ -65,7 +65,7 @@ export function Wallet() {
   };
 
   return (
-    <Card className="h-full">
+    <Card className="h-full overflow-scroll">
       <CardHeader>
         <CardTitle>Wallet</CardTitle>
         <CardDescription>Manage your personal funds</CardDescription>

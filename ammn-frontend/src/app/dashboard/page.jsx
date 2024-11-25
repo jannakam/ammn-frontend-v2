@@ -8,6 +8,7 @@ import { Friends } from "@/components/Friends";
 import Image from "next/image";
 import { Salifny } from "@/components/Salifny";
 import { Gatiya } from "@/components/Gatiya";
+import { Logo } from "@/components/Logo";
 
 
 export default function Dashboard() {
@@ -23,8 +24,8 @@ export default function Dashboard() {
             <div className="box border size-full overflow-hidden">
               <div className="flex size-full items-start justify-center gap-3 max-md:flex-col md:items-center">
                 <ThemeSwitcher />
-                <Image src="/logo_black.svg" alt="AMMN" width={200} height={200} className="fixed"/>
-              </div>
+                <Logo />
+                </div>
             </div>
           </div>
   
