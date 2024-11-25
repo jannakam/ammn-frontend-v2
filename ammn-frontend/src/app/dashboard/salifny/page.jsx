@@ -5,9 +5,11 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
+//import { Textarea } from "@/components/ui/textarea";
 import { defineStepper } from "@stepperize/react";
-import "./App.css";
+//import "./App.css";
+//import "./styles/App.css";
+
 import { useState, useEffect } from "react";
 
 const { useStepper, steps } = defineStepper(
@@ -28,9 +30,11 @@ export default function page() {
   //Library imports
   const stepper = useStepper();
 
+  //const [terms, setTerms] = useState(false);
+
   useEffect(() => {
     const fetchFriends = async () => {
-      const response = await fetch("http://localhost:3000/dashboard/friends");
+      const response = await fetch("http://localhost:3001/dashboard/friends");
       const data = await response.json();
       // Sort alphabetically by name
       const sortedFriends = data.sort((a, b) => a.name.localeCompare(b.name));
@@ -41,14 +45,8 @@ export default function page() {
 
   //1. display the friends lists
   const [friends, setFriends] = useState([]);
-  const [selectedFriend, setSelectedFriend] = useState(null);
+
   const [selected, setSelected] = useState(null);
-
-  const handleSelectFriend = (friend) => {
-    setSelected(friend);
-    setSelectedFriend(friend);
-  };
-
   //2. set balance and payment method (slider thingy)
   const [totalBalance, setTotalBalance] = useState(" ");
   const [paymentMethod, setPaymentMethod] = useState("onePayment");
@@ -133,12 +131,30 @@ export default function page() {
                       Friends: () => (
                         <FriendsComponent
                           friends={friends}
-                          setSelectedFriend={setSelectedFriend}
+                          selected={selected}
+                          setSelected={setSelected}
                           stepper={stepper}
                         />
                       ),
-                      payment: () => <PaymentComponent />,
-                      complete: () => <CompleteComponent />,
+                      payment: () => (
+                        <PaymentComponent
+                          totalBalance={totalBalance}
+                          setTotalBalance={setTotalBalance}
+                          paymentMethod={paymentMethod}
+                          setPaymentMethod={setPaymentMethod}
+                          installmentValue={installmentValue}
+                          setInstallmentValue={setInstallmentValue}
+                        />
+                      ),
+                      complete: () => (
+                        <CompleteComponent
+                          selected={selected}
+                          totalBalance={totalBalance}
+                          paymentMethod={paymentMethod}
+                          installmentValue={installmentValue}
+                          terms={generateTerms()}
+                        />
+                      ),
                     })}
                 </div>
               </div>
@@ -168,7 +184,11 @@ export default function page() {
   );
 }
 
-const FriendsComponent = () => {
+const FriendsComponent = ({ friends, selected, setSelected, stepper }) => {
+  //   const handleSelectFriend = (friend) => {
+  //     setSelected(friend);
+  //   };
+
   return (
     <div className="grid gap-4 w-full">
       {/* <div className="grid gap-2">
@@ -190,7 +210,7 @@ const FriendsComponent = () => {
                 id={`friend-${friend.id}`}
                 name="selectedFriend"
                 value={friend.id}
-                onChange={() => handleSelectFriend(friend)}
+                onChange={() => setSelected(friend)}
                 checked={selected?.id === friend.id}
                 className="w-4 h-4"
               />
@@ -211,7 +231,7 @@ const FriendsComponent = () => {
         <Button
           onClick={() => {
             if (selected) {
-              stepper.next(); 
+              stepper.next();
             } else {
               alert("Please select a friend before proceeding.");
             }
@@ -220,17 +240,21 @@ const FriendsComponent = () => {
         >
           Next
         </Button>
-        
       </div>
     </div>
   );
 };
 
-const PaymentComponent = () => {
-  const [totalBalance, setTotalBalance] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("onePayment");
-  const [installmentValue, setInstallmentValue] = useState(2);
+const PaymentComponent = ({
+  totalBalance,
+  setTotalBalance,
+  paymentMethod,
+  setPaymentMethod,
+  installmentValue,
+  setInstallmentValue,
+}) => {
   const allowedInstallments = [2, 3, 4];
+
   return (
     <div className="grid gap-4">
       {/* Input for the total balance */}
@@ -306,7 +330,7 @@ const PaymentComponent = () => {
                   htmlFor={`installment-${installment}`}
                   className="text-sm font-medium"
                 >
-                  {installment} Installments
+                  {installment} months
                 </label>
               </div>
             ))}
@@ -317,9 +341,20 @@ const PaymentComponent = () => {
   );
 };
 
-const CompleteComponent = () => {
-  return (
-    <h3 className="text-lg py-4 font-medium">Stepper complete 🔥</h3>
-    // add the terms and conditions + the selected choises
-  );
-};
+const CompleteComponent = ({
+  selected,
+  totalBalance,
+  paymentMethod,
+  installmentValue,
+}) => (
+  <div className="py-4">
+    <h3 className="text-lg font-medium">Salifny Request: </h3>
+    <p>Friend: {selected?.name}</p>
+    <p>Payment Method: {paymentMethod}</p>
+    {paymentMethod === "installment" && <p>Installments: {installmentValue}</p>}
+    <p>Loan Amount: {totalBalance}</p>
+    <p className="text-sm font-medium mt-4">Terms and Conditions:</p>
+    {/* fix this later!!!!!!! */}
+    {/* <p className="text-sm">{terms || "Default terms and conditions."}</p> */}
+  </div>
+);
