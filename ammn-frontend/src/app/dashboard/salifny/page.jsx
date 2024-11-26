@@ -1,31 +1,21 @@
 "use client";
 
 import * as React from "react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 import { defineStepper } from "@stepperize/react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-//Date imports
-import { DayPicker } from "react-day-picker";
-//import "react-day-picker/style.css";
 
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { useState, useEffect } from "react";
-import TermsAndConditionsModal from "@/components/TermsAndConditionsModal";
-// import { TermsAndConditionsModal } from "./TermsAndConditionsModal";
-
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const { useStepper, steps } = defineStepper(
   {
@@ -46,53 +36,25 @@ const { useStepper, steps } = defineStepper(
   { id: "complete", title: "Complete", description: "Loan Request complete" }
 );
 
-export default function page() {
-  //Library imports
+export default function Page() {
   const stepper = useStepper();
 
-
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchFriends = async () => {
       const response = await fetch("http://localhost:3000/dashboard/friends");
       const data = await response.json();
-      // Sort alphabetically by name
       const sortedFriends = data.sort((a, b) => a.name.localeCompare(b.name));
       setFriends(sortedFriends);
     };
     fetchFriends();
   }, []);
 
-  //1. display the friends lists
-  const [friends, setFriends] = useState([]);
-
-  const [selected, setSelected] = useState(null);
-  //2. set balance and payment method (slider thingy)
-  const [totalBalance, setTotalBalance] = useState(" ");
-  const [paymentMethod, setPaymentMethod] = useState("onePayment");
-
-  const [installmentValue, setInstallmentValue] = useState(2);
-  const allowedInstallments = [2, 3, 4];
-
-  const handleInstallmentChange = (e) => {
-    setInstallmentValue(e.value);
-  };
-
-  //3. Set a Due date
-  const [dueDate, SetDueDate] = useState(null);
-
-  const handleDateSelect = (selectedDate) => {
-    setDueDate(selectedDate);
-  };
-
-  //4. terms and conditions
-  const [terms, setTerms] = useState(false);
-
-  // Randomly generated terms and conditions preview
- 
-
-  // const generateTerms = () => {
-  //   return termsAndConditions;
-  // };
+  const [friends, setFriends] = React.useState([]);
+  const [selected, setSelected] = React.useState(null);
+  const [totalBalance, setTotalBalance] = React.useState("");
+  const [paymentMethod, setPaymentMethod] = React.useState("onePayment");
+  const [installmentValue, setInstallmentValue] = React.useState(2);
+  const [dueDate, setDueDate] = React.useState(null);
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -103,7 +65,6 @@ export default function page() {
             <span className="text-sm text-muted-foreground">
               Step {stepper.current.index + 1} of {steps.length}
             </span>
-            <div />
           </div>
         </div>
         <nav aria-label="Checkout Steps" className="group my-4">
@@ -134,9 +95,7 @@ export default function page() {
                   {index < array.length - 1 && (
                     <div
                       className="flex justify-center"
-                      style={{
-                        paddingInlineStart: "1.25rem",
-                      }}
+                      style={{ paddingInlineStart: "1.25rem" }}
                     >
                       <Separator
                         orientation="vertical"
@@ -170,7 +129,10 @@ export default function page() {
                           />
                         ),
                         Date: () => (
-                          <DateComponent dueDate={dueDate} setDueDate={SetDueDate} />
+                          <DatePickerComponent
+                            dueDate={dueDate}
+                            setDueDate={setDueDate}
+                          />
                         ),
                         complete: () => (
                           <CompleteComponent
@@ -179,8 +141,6 @@ export default function page() {
                             paymentMethod={paymentMethod}
                             installmentValue={installmentValue}
                             dueDate={dueDate}
-                            // terms={TermsAndConditionsModal}
-                            // onComplete={() => alert("Loan request completed!")}
                           />
                         ),
                       })}
@@ -213,66 +173,35 @@ export default function page() {
   );
 }
 
-const FriendsComponent = ({ friends, selected, setSelected, stepper }) => {
-  //   const handleSelectFriend = (friend) => {
-  //     setSelected(friend);
-  //   };
-
-  return (
-    <div className="grid gap-4 w-full">
-      {/* <div className="grid gap-2">
-        <label htmlFor="name" className="text-sm font-medium text-start">
-          Name
-        </label>
-        <Input id="name" placeholder="John Doe" className="w-full" />
-      </div> */}
-
-      {/* add a button to submit ? */}
-      <h3 className="text-lg font-medium">Select a Friend</h3>
-
-      {friends.length > 0 ? (
-        <ul className="space-y-2">
-          {friends.map((friend) => (
-            <li key={friend.id} className="flex items-center gap-2">
-              <input
-                type="radio"
-                id={`friend-${friend.id}`}
-                name="selectedFriend"
-                value={friend.id}
-                onChange={() => setSelected(friend)}
-                checked={selected?.id === friend.id}
-                className="w-4 h-4"
-              />
-              <label
-                htmlFor={`friend-${friend.id}`}
-                className="text-sm font-medium"
-              >
-                {friend.name}
-              </label>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-muted-foreground">No friends available.</p>
-      )}
-
-      <div className="flex justify-end">
-        <Button
-          onClick={() => {
-            if (selected) {
-              stepper.next();
-            } else {
-              alert("Please select a friend before proceeding.");
-            }
-          }}
-          disabled={!selected}
-        >
-          Next
-        </Button>
-      </div>
+const FriendsComponent = ({ friends, selected, setSelected, stepper }) => (
+  <div className="grid gap-4 w-full">
+    <h3 className="text-lg font-medium">Select a Friend</h3>
+    <RadioGroup
+      value={selected?.id || ""}
+      onValueChange={(value) => {
+        const friend = friends.find((f) => f.id === value);
+        setSelected(friend);
+      }}
+    >
+      {friends.map((friend) => (
+        <div key={friend.id} className="flex items-center gap-2">
+          <RadioGroupItem id={`friend-${friend.id}`} value={friend.id} />
+          <Label htmlFor={`friend-${friend.id}`}>{friend.name}</Label>
+        </div>
+      ))}
+    </RadioGroup>
+    <div className="flex justify-end">
+      <Button
+        onClick={() => {
+          if (selected) stepper.next();
+        }}
+        disabled={!selected}
+      >
+        Next
+      </Button>
     </div>
-  );
-};
+  </div>
+);
 
 const PaymentComponent = ({
   totalBalance,
@@ -281,125 +210,85 @@ const PaymentComponent = ({
   setPaymentMethod,
   installmentValue,
   setInstallmentValue,
-}) => {
-  const allowedInstallments = [2, 3, 4];
-
-  return (
-    <div className="grid gap-4">
-      {/* Input for the total balance */}
-      <div className="grid gap-2">
-        <label
-          htmlFor="total-balance"
-          className="text-sm font-medium text-start"
-        >
-          Add Amount
-        </label>
-        <Input
-          id="total-balance"
-          value={totalBalance}
-          onChange={(e) => setTotalBalance(e.target.value)}
-          placeholder="Enter total balance of gatiya"
-          className="w-full"
-        />
-      </div>
-
-      {/* Payment method selection */}
-      <div className="grid gap-2">
-        <label className="text-sm font-medium text-start">
-          Choose Payment Method
-        </label>
+}) => (
+  <div className="grid gap-4">
+    <div className="grid gap-2">
+      <Label htmlFor="total-balance" className="text-sm font-medium">
+        Add Amount
+      </Label>
+      <Input
+        id="total-balance"
+        value={totalBalance}
+        onChange={(e) => setTotalBalance(e.target.value)}
+        placeholder="Enter total balance"
+        className="w-full"
+      />
+    </div>
+    <div className="grid gap-2">
+      <Label className="text-sm font-medium">Choose Payment Method</Label>
+      <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
         <div className="flex gap-4">
           <div className="flex items-center gap-2">
-            <input
-              type="radio"
-              id="onePayment"
-              name="paymentMethod"
-              value="onePayment"
-              checked={paymentMethod === "onePayment"}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            />
-            <label htmlFor="onePayment" className="text-sm font-medium">
-              One Payment
-            </label>
+            <RadioGroupItem id="onePayment" value="onePayment" />
+            <Label htmlFor="onePayment">One Payment</Label>
           </div>
           <div className="flex items-center gap-2">
-            <input
-              type="radio"
-              id="installment"
-              name="paymentMethod"
-              value="installment"
-              checked={paymentMethod === "installment"}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            />
-            <label htmlFor="installment" className="text-sm font-medium">
-              Installments
-            </label>
+            <RadioGroupItem id="installment" value="installment" />
+            <Label htmlFor="installment">Installments</Label>
           </div>
         </div>
-      </div>
-
-      {/* Installment options */}
-      {paymentMethod === "installment" && (
-        <div className="grid gap-2">
-          <label className="text-sm font-medium text-start">
-            Choose Installment Type
-          </label>
+      </RadioGroup>
+    </div>
+    {paymentMethod === "installment" && (
+      <div className="grid gap-2">
+        <Label className="text-sm font-medium">Choose Installments</Label>
+        <RadioGroup
+          value={installmentValue.toString()}
+          onValueChange={(value) => setInstallmentValue(Number(value))}
+        >
           <div className="flex gap-4">
-            {allowedInstallments.map((installment) => (
-              <div key={installment} className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  id={`installment-${installment}`}
-                  name="installmentValue"
-                  value={installment}
-                  checked={installmentValue === installment}
-                  onChange={(e) => setInstallmentValue(Number(e.target.value))}
-                />
-                <label
-                  htmlFor={`installment-${installment}`}
-                  className="text-sm font-medium"
-                >
-                  {installment} months
-                </label>
+            {[2, 3, 4].map((value) => (
+              <div key={value} className="flex items-center gap-2">
+                <RadioGroupItem id={`installment-${value}`} value={value.toString()} />
+                <Label htmlFor={`installment-${value}`}>{value} months</Label>
               </div>
             ))}
           </div>
-        </div>
-      )}
-    </div>
-  );
-};
+        </RadioGroup>
+      </div>
+    )}
+  </div>
+);
 
-
-const DateComponent = ({ dueDate, setDueDate }) => {
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className={cn(
-            "w-[280px] justify-start text-left font-normal",
-            !dueDate && "text-muted-foreground"
-          )}
-        >
-          <CalendarIcon className="mr-2" />
-          {dueDate ? format(dueDate, "PPP") : <span>Pick a date</span>}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
-        <DayPicker
-          mode="single"
-          selected={dueDate}
-          //onSelect={setDueDate} // Update the parent state with the selected date
-          onSelect={(date) => {
-            setDueDate(date);
-          }}
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover>
-  );
-};
+const DatePickerComponent = ({ dueDate, setDueDate }) => (
+  <Popover>
+    <PopoverTrigger asChild>
+      <Button
+        variant="outline"
+        className={cn(
+          "w-[280px] justify-start text-left font-normal",
+          !dueDate && "text-muted-foreground"
+        )}
+      >
+        <CalendarIcon className="mr-2" />
+        {dueDate ? format(dueDate, "PPP") : "Pick a date"}
+      </Button>
+    </PopoverTrigger>
+    <PopoverContent
+      className="w-auto p-0"
+      style={{
+        animation: "none", // Removes sliding animations
+      }}
+    >
+      <Calendar
+        mode="single"
+        selected={dueDate}
+        onSelect={setDueDate}
+        initialFocus
+      />
+    </PopoverContent>
+  </Popover>
+);
 
 const CompleteComponent = ({
   selected,
@@ -407,133 +296,37 @@ const CompleteComponent = ({
   paymentMethod,
   installmentValue,
   dueDate,
-  //terms, onComplete,
 }) => (
-  <div className="py-4">
-    <h3 className="text-lg font-medium">Salifny Request: </h3>
-    <p>Friend: {selected?.name}</p>
-    <p>Payment Method: {paymentMethod}</p>
-    {paymentMethod === "installment" && <p>Installments: {installmentValue}</p>}
-    <p>Loan Amount: {totalBalance}</p>
-    <p>Due Date: {dueDate ? format(dueDate, "PPP") : "No due date selected"}</p>
-    <p className="text-sm font-medium mt-4">Terms and Conditions:</p>
-    {/* fix this later!!!!!!! */}
-    {/* <p className="text-sm">{terms || "Default terms and conditions."}</p> */}
-  </div>
+  <Card className="mt-4">
+    <CardHeader>
+      <CardTitle className="text-lg font-medium">Salifny Request Summary</CardTitle>
+      <CardDescription>Review your loan request details</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-between">
+          <span className="font-semibold">Friend:</span>
+          <span>{selected?.name || "Not selected"}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="font-semibold">Payment Method:</span>
+          <span>{paymentMethod}</span>
+        </div>
+        {paymentMethod === "installment" && (
+          <div className="flex justify-between">
+            <span className="font-semibold">Installments:</span>
+            <span>{installmentValue} months</span>
+          </div>
+        )}
+        <div className="flex justify-between">
+          <span className="font-semibold">Loan Amount:</span>
+          <span>{totalBalance || "Not provided"}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="font-semibold">Due Date:</span>
+          <span>{dueDate ? format(dueDate, "PPP") : "No due date selected"}</span>
+        </div>
+      </div>
+    </CardContent>
+  </Card>
 );
-
-// const CompleteComponent = ({
-//   selected,
-//   totalBalance,
-//   paymentMethod,
-//   installmentValue,
-//   dueDate,
-//   terms,
-//   onComplete,
-// }) => {
-//   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
-//   const [termsAccepted, setTermsAccepted] = useState(false);
-
-//   const handleOpenTermsModal = () => setIsTermsModalOpen(true);
-//   const handleCloseTermsModal = () => setIsTermsModalOpen(false);
-//   const handleAcceptTerms = () => {
-//     setTermsAccepted(true);
-//     handleCloseTermsModal();
-//   };
-
-//   const handleComplete = () => {
-//     if (termsAccepted) {
-//       onComplete();
-//     } else {
-//       handleOpenTermsModal();
-//     }
-//   };
-
-//   return (
-//     <div className="py-4">
-//       <h3 className="text-lg font-medium">Loan Request: </h3>
-//       <p>Friend: {selected?.name}</p>
-//       <p>Payment Method: {paymentMethod}</p>
-//       {paymentMethod === "installment" && <p>Installments: {installmentValue}</p>}
-//       <p>Total Balance: {totalBalance}</p>
-//       <p>Due Date: {format(dueDate, "PPP")}</p>
-//       <Button onClick={handleComplete} disabled={!termsAccepted}>
-//         Complete Request
-//       </Button>
-
-//       <TermsAndConditionsModal
-//         isOpen={isTermsModalOpen}
-//         onClose={handleCloseTermsModal}
-//         terms={terms}
-//         onAccept={handleAcceptTerms}
-//       />
-//     </div>
-//   );
-// };
-
-// const CompleteComponent = ({
-//   selected,
-//   totalBalance,
-//   paymentMethod,
-//   installmentValue,
-//   dueDate,
-//   terms,
-//   onComplete,
-// }) => {
-//   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
-//   const [termsAccepted, setTermsAccepted] = useState(false);
-
-//   const handleOpenTermsModal = () => setIsTermsModalOpen(true);
-//   const handleCloseTermsModal = () => setIsTermsModalOpen(false);
-//   const handleAcceptTerms = () => {
-//     setTermsAccepted(true);
-//     setIsTermsModalOpen(false);
-//   };
-
-//   const handleComplete = () => {
-//     if (!termsAccepted) {
-//       alert("You must accept the terms and conditions.");
-//       return;
-//     }
-//     onComplete();
-//   };
-
-//   return (
-//     <div className="py-4">
-//       <h3 className="text-lg font-medium">Loan Request Summary:</h3>
-//       <p>Friend: {selected?.name}</p>
-//       <p>Payment Method: {paymentMethod}</p>
-//       {paymentMethod === "installment" && <p>Installments: {installmentValue}</p>}
-//       <p>Loan Amount: {totalBalance}</p>
-//       <p>Due Date: {dueDate ? format(dueDate, "PPP") : "No due date selected"}</p>
-
-//       <p className="text-sm font-medium mt-4">Terms and Conditions:</p>
-//       <p className="text-sm">{terms || "Default terms and conditions."}</p>
-
-//       <div className="flex justify-end">
-//         <Button
-//           onClick={handleOpenTermsModal}
-//           variant="secondary"
-//           disabled={termsAccepted}
-//         >
-//           Review Terms
-//         </Button>
-//         <Button
-//           onClick={handleComplete}
-//           disabled={!termsAccepted}
-//         >
-//           Complete
-//         </Button>
-//       </div>
-
-//       {/* Modal for terms acceptance */}
-//       {isTermsModalOpen && (
-//         <TermsAndConditionsModal
-//           terms={terms}
-//           onAccept={handleAcceptTerms}
-//           onClose={handleCloseTermsModal}
-//         />
-//       )}
-//     </div>
-//   );
-// };
