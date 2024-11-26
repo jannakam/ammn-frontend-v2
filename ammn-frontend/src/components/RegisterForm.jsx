@@ -99,7 +99,7 @@ function RegisterForm() {
       className="min-w-[20rem]"
       formSchema={formSchema}
     >
-      <AutoFormSubmit className="w-full" disabled={isLoading}>
+      <AutoFormSubmit className="w-full bg-primary hover:bg-accent" disabled={isLoading}>
         {isLoading ? <LoaderCircle className="h-6 w-6 animate-spin" /> : 'Sign Up'}
       </AutoFormSubmit>
     </AutoForm>

@@ -1,28 +1,40 @@
 import React from 'react';
+import Image from 'next/image';
 
 export default function HeroSection() {
-    <div class="banner">
-    <div class="slider" style="--quantity: 10">
-        <div class="item" style="--position: 1"><img src="card1.png" alt="" /></div>
-        <div class="item" style="--position: 2"><img src="card1.png" alt="" /></div>
-        <div class="item" style="--position: 3"><img src="card1.png" alt="" /></div>
-        <div class="item" style="--position: 4"><img src="card1.png" alt="" /></div>
-        <div class="item" style="--position: 5"><img src="card1.png" alt="" /></div>
-        <div class="item" style="--position: 6"><img src="card1.png" alt="" /></div>
-        <div class="item" style="--position: 7"><img src="card1.png" alt="" /></div>
-        <div class="item" style="--position: 8"><img src="card1.png" alt="" /></div>
-        <div class="item" style="--position: 9"><img src="card1.png" alt="" /></div>
-        <div class="item" style="--position: 10"><img src="card1.png" alt="" /></div>
-    </div>
-    <div class="content">
-        <h1 data-content="CSS ONLY">
-            CSS ONLY
-        </h1>
-        <div class="author">
-            <p>By Wahab, Janna, Saja and Nora</p>
-        </div>
-        <div class="model"></div>
-    </div>
-</div>
+    const payments = [
+        { name: 'Mastercard', src: '/payments/Mastercard.svg' },
+        { name: 'Visa', src: '/payments/Visa.svg' },
+        { name: 'Paypal', src: '/payments/PayPal.svg' },
+        { name: 'Stripe', src: '/payments/Stripe.svg' },
+        { name: 'Apple Pay', src: '/payments/ApplePay.svg' },
+        { name: 'Google Pay', src: '/payments/GooglePay.svg' },
+        { name: 'Amex', src: '/payments/Amex.svg' },
+        { name: 'Bitcoin', src: '/payments/Bitcoin.svg' },
+    ]
 
+    return (
+        <div className="banner h-screen">
+            <div className="slider" style={{ '--quantity': '8' }}>
+                {payments.map((_, i) => (
+                    <div
+                        className="item"
+                        style={{ '--position': i + 1 }}
+                        key={i}
+                    >
+                        <Image
+                            src={payments[i].src}
+                            alt={`Card ${i + 1}`}
+                            width={280}
+                            height={200}
+                        />
+                    </div>
+                ))}
+            </div>
+            <div className="content">
+                
+                <div className="model"></div>
+            </div>
+        </div>
+    );
 }

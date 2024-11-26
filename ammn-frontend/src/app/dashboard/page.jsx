@@ -9,14 +9,25 @@ import Image from "next/image";
 import { Salifny } from "@/components/Salifny";
 import { Gatiya } from "@/components/Gatiya";
 import { Logo } from "@/components/Logo";
+import { Logout } from "@/components/Logout";
+import { BackgroundGradientAnimation } from "@/components/ui/background-gradient-animation";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { Toaster } from "@/components/ui/toaster"; 
+
 
 
 export default function Dashboard() {
     return (
-      <main className="relative w-full overflow-auto rounded-l-2xl bg-background">
-
-        {/* LOGOUT BUTTON */}
-        <Power className="fixed top-5 right-5 h-4 w-4"/>
+    //   <ThemeProvider
+    //   attribute="class"
+    //   defaultTheme="system"
+    //   enableSystem
+    // >
+    //   <ThemeSwitcher />
+    //   <Toaster />
+    <BackgroundGradientAnimation>
+      <main className="relative w-full overflow-auto z-10">
+        <Logout />
 
         {/* GRID STARTS  */}
         <div className="grid h-screen max-h-[75rem] min-h-[50rem] grid-cols-12 grid-rows-10 gap-4 p-4 max-md:h-auto max-md:max-h-none max-md:grid-rows-none max-md:gap-y-10 max-md:py-6">
@@ -40,7 +51,7 @@ export default function Dashboard() {
             </div>
           </div>
   
-            {/* GA6YA CELL */}
+            {/* GATIYA CELL */}
           <div className="col-span-6 row-span-8 grid grid-cols-subgrid grid-rows-subgrid max-md:col-span-full max-md:grid-rows-none max-md:gap-4">
             <div className="col-span-6 row-span-4 max-md:col-span-full">
               <div className="box border size-full overflow-hidden rounded-none">
@@ -79,6 +90,7 @@ export default function Dashboard() {
           </div>
         </div>
       </main>
+      </BackgroundGradientAnimation>
     );
   }
   

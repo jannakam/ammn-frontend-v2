@@ -14,8 +14,8 @@ import {
     ];
   
     return (
-      <Card className="h-full relative z-10"> {/* Ensure it is above other elements */}
-        <CardHeader>
+      <Card className="h-full relative z-10 overflow-scroll backdrop-blur-lg bg-background/70"> 
+        <CardHeader className="bg-background mb-5">
           <CardTitle>Salifny</CardTitle>
           <CardDescription>
             Request money from friends and family with ease.
@@ -34,7 +34,7 @@ import {
               <Button
                 variant="secondary"
                 size="sm"
-                className={friend.status === "Pay" ? "bg-secondary" : "bg-destructive"}
+                className={friend.status === "Pay" ? "bg-accent" : "bg-destructive"}
               >
                 {friend.status}
               </Button>

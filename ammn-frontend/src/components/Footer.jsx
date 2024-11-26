@@ -1,10 +1,9 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui/button"; // ShadCN Button component
+import { Button } from "@/components/ui/button"; 
 import Image from "next/image";
-import { Github, Twitter, Linkedin } from "lucide-react"; // Lucide icons
-import { Logo } from "@/components/Logo"; // Logo component
+import { Logo } from "@/components/Logo";
 
 const Footer = () => {
   return (
@@ -16,6 +15,7 @@ const Footer = () => {
           <Logo inverted={true}/>
         </div>
 
+    
         {/* Copyright Section */}
         <div className="text-center md:text-left mb-4 md:mb-0">
           <p>&copy; {new Date().getFullYear()} AMMN. All rights reserved.</p>
