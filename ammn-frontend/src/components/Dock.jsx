@@ -37,7 +37,7 @@ export function Dock() {
               <User className="h-full w-full" />
             </button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-w-[50rem] max-h-[41rem] w-full h-full">
             <ProfileModal onClose={() => setActiveModal(null)} />
           </DialogContent>
         </Dialog>
@@ -57,7 +57,7 @@ export function Dock() {
               <Star className="h-full w-full" />
             </button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-w-[50rem] max-h-[41rem] w-full h-full">
             <FriendsModal onClose={() => setActiveModal(null)} />
           </DialogContent>
         </Dialog>
@@ -77,7 +77,7 @@ export function Dock() {
               <HeartHandshake className="h-full w-full" />
             </button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-w-[50rem] max-h-[41rem] w-full h-full">
             <SalifnyModal onClose={() => setActiveModal(null)} />
           </DialogContent>
         </Dialog>
@@ -97,7 +97,7 @@ export function Dock() {
               <Users className="h-full w-full" />
             </button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-w-[50rem] max-h-[41rem] w-full h-full">
             <GatiyaModal onClose={() => setActiveModal(null)} />
           </DialogContent>
         </Dialog>
