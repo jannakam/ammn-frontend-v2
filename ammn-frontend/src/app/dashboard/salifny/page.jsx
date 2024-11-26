@@ -10,6 +10,20 @@ import { defineStepper } from "@stepperize/react";
 //import "./App.css";
 //import "./styles/App.css";
 
+//Date imports
+// import { DayPicker } from "react-day-picker";
+// import "react-day-picker/style.css";
+
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useState, useEffect } from "react";
 
 const { useStepper, steps } = defineStepper(
@@ -23,6 +37,11 @@ const { useStepper, steps } = defineStepper(
     title: "Choose Amount",
     description: "Enter Loan Amount and Payment method",
   },
+  {
+    id: "Date",
+    title: "Maturity Date",
+    description: "Enter a Due Date for Loan",
+  },
   { id: "complete", title: "Complete", description: "Checkout complete" }
 );
 
@@ -34,7 +53,7 @@ export default function page() {
 
   useEffect(() => {
     const fetchFriends = async () => {
-      const response = await fetch("http://localhost:3001/dashboard/friends");
+      const response = await fetch("http://localhost:3000/dashboard/friends");
       const data = await response.json();
       // Sort alphabetically by name
       const sortedFriends = data.sort((a, b) => a.name.localeCompare(b.name));
@@ -58,7 +77,15 @@ export default function page() {
     setInstallmentValue(e.value);
   };
 
-  //3. terms and conditions
+  //3. Set a Due date
+  const [dueDate, SetDueDate] = useState(null);
+
+  const handleDateSelect = (selectedDate) => {
+    setDueDate(selectedDate);
+  };
+
+
+  //4. terms and conditions
   const [terms, setTerms] = useState(false);
 
   // Randomly generated terms and conditions preview
@@ -146,12 +173,16 @@ export default function page() {
                           setInstallmentValue={setInstallmentValue}
                         />
                       ),
+                      Date: () => (
+                        <DateComponent date={dueDate} setDate={SetDueDate} />
+                      ),
                       complete: () => (
                         <CompleteComponent
                           selected={selected}
                           totalBalance={totalBalance}
                           paymentMethod={paymentMethod}
                           installmentValue={installmentValue}
+                          dueDate={dueDate}
                           terms={generateTerms()}
                         />
                       ),
@@ -341,11 +372,59 @@ const PaymentComponent = ({
   );
 };
 
+// const DateComponent = ({ date, setDate }) => (
+//   <Popover>
+//     <PopoverTrigger asChild>
+//       <Button
+//         variant={"outline"}
+//         className={cn(
+//           "w-[280px] justify-start text-left font-normal",
+//           !date && "text-muted-foreground"
+//         )}
+//       >
+//         <CalendarIcon />
+//         {date ? format(date, "PPP") : <span>Pick a date</span>}
+//       </Button>
+//     </PopoverTrigger>
+//     <PopoverContent className="w-auto p-0">
+//       <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
+//     </PopoverContent>
+//   </Popover>
+// );
+
+const DateComponent = () => {
+  const [date, setDate] = useState(null);
+  //const [duedate, setDueDate] = useState(null);
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant={"outline"}
+          className={cn("w-[280px] justify-start text-left font-normal", !date && "text-muted-foreground")}
+        >
+          <CalendarIcon />
+          {date ? format(date, "PPP") : <span>Pick a date</span>}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0">
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={setDate}
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 const CompleteComponent = ({
   selected,
   totalBalance,
   paymentMethod,
   installmentValue,
+  dueDate,
 }) => (
   <div className="py-4">
     <h3 className="text-lg font-medium">Salifny Request: </h3>
@@ -353,6 +432,7 @@ const CompleteComponent = ({
     <p>Payment Method: {paymentMethod}</p>
     {paymentMethod === "installment" && <p>Installments: {installmentValue}</p>}
     <p>Loan Amount: {totalBalance}</p>
+    <p>Due Date: {dueDate ? format(dueDate, "PPP") : "No due date selected"}</p>
     <p className="text-sm font-medium mt-4">Terms and Conditions:</p>
     {/* fix this later!!!!!!! */}
     {/* <p className="text-sm">{terms || "Default terms and conditions."}</p> */}
