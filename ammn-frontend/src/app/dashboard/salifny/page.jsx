@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 //import { Textarea } from "@/components/ui/textarea";
-import { defineStepper } from "@stepperize/react";
+// import { defineStepper } from "@stepperize/react";
 //import "./App.css";
 //import "./styles/App.css";
 
