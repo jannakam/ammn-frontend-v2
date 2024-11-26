@@ -19,11 +19,6 @@ const GatiyaModal = () => {
     <div>
       {/* Trigger to open the modal */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger asChild>
-          <Button variant="outline" onClick={() => setIsOpen(true)}>
-            Open Modal
-          </Button>
-        </DialogTrigger>
 
         {/* Modal content */}
         <DialogContent>

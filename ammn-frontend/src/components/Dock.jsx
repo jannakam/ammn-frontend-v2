@@ -1,22 +1,10 @@
-"use client";
-
 import React, { useState } from "react";
 import { FloatingDock } from "@/components/ui/floating-dock";
-import {
-  HeartHandshake,
-  Home,
-  User,
-  Users,
-  Star,
-} from "lucide-react";
+import { HeartHandshake, Home, User, Users, Star } from "lucide-react";
 
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
 
@@ -26,41 +14,113 @@ import SalifnyModal from "@/components/modals/SalifnyModal";
 import GatiyaModal from "@/components/modals/GatiyaModal";
 
 export function Dock() {
-  const [activeModal, setActiveModal] = useState(null); // Track active modal
+  const [activeModal, setActiveModal] = useState(null);
 
   const links = [
-    { title: "Home", icon: <Home className="h-full w-full" />, href: "#" }, // No modal for Home
-    { title: "Profile", icon: <User className="h-full w-full" />, href: "#", modal: "profile" },
-    { title: "Friends", icon: <Star className="h-full w-full" />, href: "#", modal: "friends" },
-    { title: "Salifny", icon: <HeartHandshake className="h-full w-full" />, href: "#", modal: "salifny" },
-    { title: "Gatiya", icon: <Users className="h-full w-full" />, href: "#", modal: "gatiya" },
+    {
+      title: "Home",
+      icon: <Home className="h-full w-full" />,
+      href: "/",
+      modal: null, // No modal for Home
+    },
+    {
+      title: "Profile",
+      icon: <User className="h-full w-full" />,
+      href: "#",
+      modal: (
+        <Dialog>
+          <DialogTrigger asChild>
+            <button
+              onClick={() => setActiveModal("profile")}
+              className="h-10 w-10 flex items-center justify-center rounded-full"
+            >
+              <User className="h-full w-full" />
+            </button>
+          </DialogTrigger>
+          <DialogContent>
+            <ProfileModal onClose={() => setActiveModal(null)} />
+          </DialogContent>
+        </Dialog>
+      ),
+    },
+    {
+      title: "Friends",
+      icon: <Star className="h-full w-full" />,
+      href: "#",
+      modal: (
+        <Dialog>
+          <DialogTrigger asChild>
+            <button
+              onClick={() => setActiveModal("friends")}
+              className="h-10 w-10 flex items-center justify-center rounded-full"
+            >
+              <Star className="h-full w-full" />
+            </button>
+          </DialogTrigger>
+          <DialogContent>
+            <FriendsModal onClose={() => setActiveModal(null)} />
+          </DialogContent>
+        </Dialog>
+      ),
+    },
+    {
+      title: "Salifny",
+      icon: <HeartHandshake className="h-full w-full" />,
+      href: "#",
+      modal: (
+        <Dialog>
+          <DialogTrigger asChild>
+            <button
+              onClick={() => setActiveModal("salifny")}
+              className="h-10 w-10 flex items-center justify-center rounded-full"
+            >
+              <HeartHandshake className="h-full w-full" />
+            </button>
+          </DialogTrigger>
+          <DialogContent>
+            <SalifnyModal onClose={() => setActiveModal(null)} />
+          </DialogContent>
+        </Dialog>
+      ),
+    },
+    {
+      title: "Gatiya",
+      icon: <Users className="h-full w-full" />,
+      href: "#",
+      modal: (
+        <Dialog>
+          <DialogTrigger asChild>
+            <button
+              onClick={() => setActiveModal("gatiya")}
+              className="h-10 w-10 flex items-center justify-center rounded-full"
+            >
+              <Users className="h-full w-full" />
+            </button>
+          </DialogTrigger>
+          <DialogContent>
+            <GatiyaModal onClose={() => setActiveModal(null)} />
+          </DialogContent>
+        </Dialog>
+      ),
+    },
   ];
-
-  const renderModal = () => {
-    switch (activeModal) {
-      case "profile":
-        return <ProfileModal onClose={() => setActiveModal(null)} />;
-      case "friends":
-        return <FriendsModal onClose={() => setActiveModal(null)} />;
-      case "salifny":
-        return <SalifnyModal onClose={() => setActiveModal(null)} />;
-      case "gatiya":
-        return <GatiyaModal onClose={() => setActiveModal(null)} />;
-      default:
-        return null;
-    }
-  };
 
   return (
     <div className="fixed flex items-center justify-center w-full z-40">
       <FloatingDock
-        mobileClassName="translate-y-20"
         items={links.map((link) => ({
-          ...link,
-          onClick: link.modal ? () => setActiveModal(link.modal) : null, // Only set active modal for links with modals
+          title: link.title,
+          icon: link.modal || (
+            <a
+              href={link.href}
+              className="h-10 w-10 flex items-center justify-center rounded-full"
+            >
+              {link.icon}
+            </a>
+          ), // Render icon as a link for "Home"
+          href: link.href,
         }))}
       />
-      {renderModal()}
     </div>
   );
 }

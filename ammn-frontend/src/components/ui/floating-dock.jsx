@@ -40,10 +40,10 @@ const FloatingDockMobile = ({ items, className }) => {
                   opacity: 0,
                   y: 10,
                   transition: {
-                    delay: idx * 0.05,
+                    delay: idx * 0.01,
                   },
                 }}
-                transition={{ delay: (items.length - 1 - idx) * 0.05 }}
+                transition={{ delay: (items.length - 1 - idx) * 0.01 }}
               >
                 <Link
                   href={item.href}
@@ -160,6 +160,7 @@ function IconContainer({ mouseX, title, icon, href }) {
                 initial={{ opacity: 0, y: 10, x: "-50%" }}
                 animate={{ opacity: 1, y: 0, x: "-50%" }}
                 exit={{ opacity: 0, y: 2, x: "-50%" }}
+                transition={{ duration: 0.00001 }} // Faster transition
                 className="px-2 py-0.5 whitespace-pre rounded-md bg-card text-foreground border border-border dark:border-muted-foreground absolute left-1/2 -translate-x-1/2 -top-8 w-fit text-xs"
               >
                 {title}
