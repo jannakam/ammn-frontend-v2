@@ -3,12 +3,17 @@ import { Logo } from "@/components/Logo";
 import AuthSection from "@/components/AuthSection";
 import HeroSection from "@/components/HeroSection";
 import { Team } from "@/components/Team";
+import StackedCards from "./StackedCards";
+
 
 export function Slider() {
     return (
         <div className="relative">
         <div className="sticky top-0 h-screen flex flex-col items-center justify-center bg-gradient-to-b from-background to-accent">
             <HeroSection className="mt-2" />
+        </div>
+        <div className="sticky top-0 h-screen flex flex-col items-center justify-center bg-gradient-to-b from-background to-background text-foreground">
+            <StackedCards className="mt-2" />
         </div>
         <div className="sticky top-0 h-screen flex flex-col items-center justify-center bg-gradient-to-b from-background to-background text-foreground">
             <AuthSection className="mt-2" />
