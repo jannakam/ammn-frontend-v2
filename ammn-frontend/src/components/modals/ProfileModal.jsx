@@ -16,37 +16,23 @@ const ProfileModal = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div>
-      {/* Trigger to open the modal */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger asChild>
-          <Button variant="outline" onClick={() => setIsOpen(true)}>
-            Open Modal
-          </Button>
-        </DialogTrigger>
 
         {/* Modal content */}
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Modal Title</DialogTitle>
+            <DialogTitle>Profile</DialogTitle>
             <DialogDescription>
-              This is a basic modal using ShadCN UI components. You can customize the content inside.
+              Your profile details
             </DialogDescription>
           </DialogHeader>
 
-          <div className="py-4">
-            <p>Here is some content for your modal. You can add anything you want here.</p>
-          </div>
 
           <DialogFooter>
-            <Button variant="secondary" onClick={() => setIsOpen(false)}>
-              Close
-            </Button>
-            <Button onClick={() => alert("Action performed!")}>Do Something</Button>
+            
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
   );
 };
 

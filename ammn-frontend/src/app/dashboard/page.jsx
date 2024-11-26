@@ -18,13 +18,6 @@ import { Toaster } from "@/components/ui/toaster";
 
 export default function Dashboard() {
     return (
-    //   <ThemeProvider
-    //   attribute="class"
-    //   defaultTheme="system"
-    //   enableSystem
-    // >
-    //   <ThemeSwitcher />
-    //   <Toaster />
     <BackgroundGradientAnimation>
       <main className="relative w-full overflow-auto z-10">
         <Logout />
