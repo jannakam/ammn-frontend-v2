@@ -11,12 +11,22 @@ import { Gatiya } from "@/components/Gatiya";
 import { Logo } from "@/components/Logo";
 import { Logout } from "@/components/Logout";
 import { BackgroundGradientAnimation } from "@/components/ui/background-gradient-animation";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { Toaster } from "@/components/ui/toaster"; 
+
 
 
 export default function Dashboard() {
     return (
+    //   <ThemeProvider
+    //   attribute="class"
+    //   defaultTheme="system"
+    //   enableSystem
+    // >
+    //   <ThemeSwitcher />
+    //   <Toaster />
     <BackgroundGradientAnimation>
-      <main className="relative w-full overflow-auto bg-background ">
+      <main className="relative w-full overflow-auto z-10">
         <Logout />
 
         {/* GRID STARTS  */}
@@ -41,7 +51,7 @@ export default function Dashboard() {
             </div>
           </div>
   
-            {/* GA6YA CELL */}
+            {/* GATIYA CELL */}
           <div className="col-span-6 row-span-8 grid grid-cols-subgrid grid-rows-subgrid max-md:col-span-full max-md:grid-rows-none max-md:gap-4">
             <div className="col-span-6 row-span-4 max-md:col-span-full">
               <div className="box border size-full overflow-hidden rounded-none">

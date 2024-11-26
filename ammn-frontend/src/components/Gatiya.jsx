@@ -26,12 +26,12 @@ export function Gatiya() {
   ];
 
   return (
-    <Card className="h-full overflow-scroll">
-      <CardHeader className="sticky top-0 z-10 bg-background">
+    <Card className="h-full overflow-scroll backdrop-blur-lg bg-background/70">
+      <CardHeader className="sticky top-0 z-10 bg-background mb-5">
         <CardTitle>Gatiya</CardTitle>
         <CardDescription>One purpose, one wallet</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6 overflow-auto">
+      <CardContent className="space-y-6">
         {gatiyas.map((gatiya, index) => (
           <Card
             key={index}

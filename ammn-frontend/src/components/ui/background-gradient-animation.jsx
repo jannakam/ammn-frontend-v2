@@ -3,20 +3,20 @@ import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 
 export const BackgroundGradientAnimation = ({
-  gradientBackgroundStart = "rgb(108, 0, 162)",
-  gradientBackgroundEnd = "rgb(0, 17, 82)",
-  firstColor = "239, 90, 111",
-  secondColor = "18, 26, 24",
-  thirdColor = "102, 181, 165",
-  fourthColor = "200, 50, 50",
-  fifthColor = "180, 180, 50",
-  pointerColor = "239, 90, 111",
+  gradientBackgroundStart = "hsl(var(--accent))", 
+  gradientBackgroundEnd = "hsl(var(--background))",
+  firstColor = "hsl(var(--destructive))", 
+  secondColor = "hsl(var(--destructive))", 
+  thirdColor = "hsl(var(--destructive))", 
+  fourthColor = "hsl(var(--destructive))", 
+  fifthColor = "hsl(var(--destructive))", 
+  pointerColor = "hsl(var(--destructive))", 
   size = "80%",
   blendingValue = "hard-light",
   children,
   className,
   interactive = true,
-  containerClassName
+  containerClassName,
 }) => {
   const interactiveRef = useRef(null);
 

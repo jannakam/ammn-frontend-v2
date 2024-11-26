@@ -68,8 +68,8 @@ export function Wallet() {
   };
 
   return (
-    <Card className="h-full overflow-scroll z-10">
-      <CardHeader>
+    <Card className="h-full overflow-scroll z-10 backdrop-blur-lg bg-background/70">
+      <CardHeader className="bg-background mb-5">
         <CardTitle>Wallet</CardTitle>
         <CardDescription>Manage your personal funds</CardDescription>
       </CardHeader>

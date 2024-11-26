@@ -24,8 +24,8 @@ export function Friends() {
     );
   
     return (
-      <Card className="h-full overflow-scroll z-10">
-        <CardHeader className="sticky top-0 z-10 bg-background">
+      <Card className="h-full overflow-scroll z-10 backdrop-blur-lg bg-background/70">
+        <CardHeader className="sticky top-0 z-10 bg-background mb-5">
           <CardTitle>Friends</CardTitle>
           <CardDescription>Find and add friends</CardDescription>
           <div className="flex flex-row gap-2">

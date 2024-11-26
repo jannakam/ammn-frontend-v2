@@ -74,7 +74,7 @@ function LoginForm() {
           },
         }}
       >
-        <AutoFormSubmit className={'w-full'} disabled={isLoading}>
+        <AutoFormSubmit className={'w-full bg-primary hover:bg-accent'} disabled={isLoading}>
           {isLoading ? <LoaderCircle className='h-6 w-6 animate-spin' /> : 'Log In'}
         </AutoFormSubmit>
       </AutoForm>

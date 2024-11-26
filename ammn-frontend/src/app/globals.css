@@ -78,11 +78,11 @@ body {
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border;
+    /* transition: background-color 0.1s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.1s cubic-bezier(0.4, 0, 0.2, 1); */
   }
   body {
     @apply bg-background text-foreground;
@@ -93,142 +93,144 @@ body {
   display: none; /* Chrome, Safari, and Opera */
 }
 
-
-
 /* HERO SCREEN CSS */
 
-@import url('https://fonts.cdnfonts.com/css/ica-rubrik-black');
-@import url('https://fonts.cdnfonts.com/css/poppins');
+@import url("https://fonts.cdnfonts.com/css/ica-rubrik-black");
+@import url("https://fonts.cdnfonts.com/css/poppins");
 
-.banner{
-    width: 100%;
-    height: 100vh;
-    text-align: center;
-    overflow: hidden;
-    position: relative;
+.banner {
+  width: 100%;
+  height: 100vh;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
 }
-.banner .slider{
-    position: relative;
-    width: 280px;
-    height: 200px;
-    top: 10%;
-    left: calc(50% - 150px);
-    transform-style: preserve-3d;
-    transform: perspective(1000px);
-    animation: autoRun 20s linear infinite;
-    z-index: 2;
+.banner .slider {
+  position: relative;
+  width: 280px;
+  height: 200px;
+  top: 10%;
+  left: calc(50% - 150px);
+  transform-style: preserve-3d;
+  transform: perspective(1000px);
+  animation: autoRun 20s linear infinite;
+  z-index: 2;
 }
-@keyframes autoRun{
-    from{
-        transform: perspective(1000px) rotateX(-16deg) rotateY(0deg);
-    }to{
-        transform: perspective(1000px) rotateX(-16deg) rotateY(360deg);
-    }
+@keyframes autoRun {
+  from {
+    transform: perspective(1000px) rotateX(-16deg) rotateY(0deg);
+  }
+  to {
+    transform: perspective(1000px) rotateX(-16deg) rotateY(360deg);
+  }
 }
 
-.banner .slider .item{
-    position: absolute;
-    inset: 0 0 0 0;
-    transform: 
-        rotateY(calc( (var(--position) - 1) * (360 / var(--quantity)) * 1deg))
-        translateZ(500px);
+.banner .slider .item {
+  position: absolute;
+  inset: 0 0 0 0;
+  transform: rotateY(
+      calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)
+    )
+    translateZ(500px);
 }
-.banner .slider .item img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.banner .slider .item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-.banner .content{
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(1400px, 100vw);
-    height: max-content;
-    padding-bottom: 100px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 1;
+.banner .content {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1400px, 100vw);
+  height: max-content;
+  padding-bottom: 100px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1;
 }
-.banner .content h1{
-    font-family: 'ICA Rubrik';
-    font-size: 16em;
-    line-height: 1em;
-    color: #25283B;
-    position: relative;
+.banner .content h1 {
+  font-family: "ICA Rubrik";
+  font-size: 16em;
+  line-height: 1em;
+  color: #25283b;
+  position: relative;
 }
-.banner .content h1::after{
-    position: absolute;
-    inset: 0 0 0 0;
-    content: attr(data-content);
-    z-index: 2;
-    -webkit-text-stroke: 2px #d2d2d2;
-    color: transparent;
+.banner .content h1::after {
+  position: absolute;
+  inset: 0 0 0 0;
+  content: attr(data-content);
+  z-index: 2;
+  -webkit-text-stroke: 2px #d2d2d2;
+  color: transparent;
 }
-.banner .content .author{
-    /* font-family: Poppins; */
-    text-align: right;
-    max-width: 200px;
+.banner .content .author {
+  /* font-family: Poppins; */
+  text-align: right;
+  max-width: 200px;
 }
-.banner .content h2{
-    font-size: 3em;
+.banner .content h2 {
+  font-size: 3em;
 }
-.banner .content .model{
-    background-image: url('/wallet.png');
-    width: 100%;
-    height: 85vh;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    background-size: auto 90%;
-    background-repeat: no-repeat;
-    background-position: top center;
-    z-index: 1;
+.banner .content .model {
+  background-image: url("/wallet.png");
+  width: 100%;
+  height: 85vh;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-size: auto 90%;
+  background-repeat: no-repeat;
+  background-position: top center;
+  z-index: 1;
 }
 @media screen and (max-width: 1023px) {
-    .banner .slider{
-        width: 160px;
-        height: 110px;
-        left: calc(50% - 80px);
-    }
-    .banner .slider .item{
-        transform: 
-            rotateY(calc( (var(--position) - 1) * (360 / var(--quantity)) * 1deg))
-            translateZ(300px);
-    }
-    .banner .content h1{
-        text-align: center;
-        width: 100%;
-        text-shadow: 0 10px 20px #000;
-        font-size: 7em;
-    }
-    .banner .content .author{
-        color: #fff;
-        padding: 20px;
-        text-shadow: 0 10px 20px #000;
-        z-index: 2;
-        max-width: unset;
-        width: 100%;
-        text-align: center;
-        padding: 0 30px;
-    }
+  .banner .slider {
+    width: 160px;
+    height: 110px;
+    left: calc(50% - 80px);
+  }
+  .banner .slider .item {
+    transform: rotateY(
+        calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)
+      )
+      translateZ(300px);
+  }
+  .banner .content h1 {
+    text-align: center;
+    width: 100%;
+    text-shadow: 0 10px 20px #000;
+    font-size: 7em;
+  }
+  .banner .content .author {
+    color: #fff;
+    padding: 20px;
+    text-shadow: 0 10px 20px #000;
+    z-index: 2;
+    max-width: unset;
+    width: 100%;
+    text-align: center;
+    padding: 0 30px;
+  }
 }
 @media screen and (max-width: 767px) {
-    .banner .slider{
-        width: 100px;
-        height: 150px;
-        left: calc(50% - 50px);
-    }
-    .banner .slider .item{
-        transform: 
-            rotateY(calc( (var(--position) - 1) * (360 / var(--quantity)) * 1deg))
-            translateZ(180px);
-    }
-    .banner .content h1{
-        font-size: 5em;
-    }
+  .banner .slider {
+    width: 100px;
+    height: 150px;
+    left: calc(50% - 50px);
+  }
+  .banner .slider .item {
+    transform: rotateY(
+        calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)
+      )
+      translateZ(180px);
+  }
+  .banner .content h1 {
+    font-size: 5em;
+  }
 }
 
 /* GRADIENT EFFECT  */
@@ -252,12 +254,15 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: -1; /* Places it behind everything else */
-  inset:0;
-  
+  inset: 0;
+
   width: var(--size);
   height: var(--size);
   filter: blur(calc(var(--size) / 5));
-  background-image: linear-gradient(hsl(164, 34%, 65%, 100%), hsl(168, 71%, 65%));
+  background-image: linear-gradient(
+    hsl(164, 34%, 65%, 100%),
+    hsl(168, 71%, 65%)
+  );
   animation: rotate var(--speed) var(--easing) alternate infinite;
   border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
 }
@@ -272,26 +277,22 @@ body {
   transition: all 0.5s ease-out;
 }
 
-
 .loader {
   width: 48px;
   height: 48px;
-  border: 5px solid #FFF;
+  border: 5px solid #fff;
   border-bottom-color: transparent;
   border-radius: 50%;
   display: inline-block;
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
-  }
+}
 
-  @keyframes rotation {
+@keyframes rotation {
   0% {
-      transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
-      transform: rotate(360deg);
+    transform: rotate(360deg);
   }
-  } 
-  
-
-  
+}
