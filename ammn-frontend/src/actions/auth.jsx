@@ -45,7 +45,7 @@ export async function signup(data) {
   }
 }
 
-// export async function logout() {
-//   await deleteToken();
-//   redirect('/');
-// }
+export async function logout() {
+  await deleteToken();
+  redirect('/');
+}
