@@ -8,6 +8,7 @@ import { Salifny } from "@/components/Salifny";
 import { Gatiya } from "@/components/Gatiya";
 import { Logo } from "@/components/Logo";
 import { Logout } from "@/components/Logout";
+import { Toaster } from "@/components/ui/toaster";
 
 
 export default function Dashboard() {
@@ -80,6 +81,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+        <Toaster />
       </main>
     );
   }

@@ -13,12 +13,12 @@ export default function page() {
 
   // I added a welcome thingy so i think the name might be not needed , either way you're going to change it so GO Wild =))
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div className="flex justify-center items-center min-h-screen bg-background">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
-            <span className="text-stone-600">Welcome </span>
-            <span className="text-stone-300">{profile.name}</span>
+            <span className="text-foreground">Welcome </span>
+            <span className="text-accent">{profile.name}</span>
           </CardTitle>
         </CardHeader>
 
@@ -34,12 +34,12 @@ export default function page() {
               />
             </div>
             <div className="space-y-2 text-center">
-              <p className="text-stone-400">Name: {profile.name}</p>
-              <p className="text-stone-400">Email: {profile.email}</p>
-              <p className="text-stone-400">
+              <p className="text-foreground">Name: {profile.name}</p>
+              <p className="text-foreground">Email: {profile.email}</p>
+              <p className="text-foreground">
                 Phone Number: {profile.phoneNumber}
               </p>
-              <p className="text-gray-600">Civil ID: {profile.civilId}</p>
+              <p className="text-accent">Civil ID: {profile.civilId}</p>
             </div>
           </div>
         </CardContent>
