@@ -5,14 +5,12 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-//import { Textarea } from "@/components/ui/textarea";
+
 import { defineStepper } from "@stepperize/react";
-//import "./App.css";
-//import "./styles/App.css";
 
 //Date imports
-// import { DayPicker } from "react-day-picker";
-// import "react-day-picker/style.css";
+import { DayPicker } from "react-day-picker";
+//import "react-day-picker/style.css";
 
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
@@ -25,6 +23,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useState, useEffect } from "react";
+import TermsAndConditionsModal from "@/components/TermsAndConditionsModal";
+// import { TermsAndConditionsModal } from "./TermsAndConditionsModal";
+
 
 const { useStepper, steps } = defineStepper(
   {
@@ -42,14 +43,13 @@ const { useStepper, steps } = defineStepper(
     title: "Maturity Date",
     description: "Enter a Due Date for Loan",
   },
-  { id: "complete", title: "Complete", description: "Checkout complete" }
+  { id: "complete", title: "Complete", description: "Loan Request complete" }
 );
 
 export default function page() {
   //Library imports
   const stepper = useStepper();
 
-  //const [terms, setTerms] = useState(false);
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -84,132 +84,130 @@ export default function page() {
     setDueDate(selectedDate);
   };
 
-
   //4. terms and conditions
   const [terms, setTerms] = useState(false);
 
   // Randomly generated terms and conditions preview
-  const generateTerms = () => {
-    const terms = [
-      "Terms 1: User must repay the loan within 30 days.",
-      "Terms 2: Late fees will apply if payment is delayed.",
-      "Terms 3: The loan is non-transferable.",
-      "Terms 4: Loan default may affect your credit score.",
-    ];
-    return terms[Math.floor(Math.random() * terms.length)];
-  };
+ 
+
+  // const generateTerms = () => {
+  //   return termsAndConditions;
+  // };
 
   return (
-    <div className="space-y-6 p-6 border rounded-lg w-[450px]">
-      <div className="flex justify-between">
-        <h2 className="text-lg font-medium">Checkout</h2>
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">
-            Step {stepper.current.index + 1} of {steps.length}
-          </span>
-          <div />
-        </div>
-      </div>
-      <nav aria-label="Checkout Steps" className="group my-4">
-        <ol className="flex flex-col gap-2" aria-orientation="vertical">
-          {stepper.all.map((step, index, array) => (
-            <React.Fragment key={step.id}>
-              <li className="flex items-center gap-4 flex-shrink-0">
-                <Button
-                  type="button"
-                  role="tab"
-                  variant={
-                    index <= stepper.current.index ? "default" : "secondary"
-                  }
-                  aria-current={
-                    stepper.current.id === step.id ? "step" : undefined
-                  }
-                  aria-posinset={index + 1}
-                  aria-setsize={steps.length}
-                  aria-selected={stepper.current.id === step.id}
-                  className="flex size-10 items-center justify-center rounded-full"
-                  onClick={() => stepper.goTo(step.id)}
-                >
-                  {index + 1}
-                </Button>
-                <span className="text-sm font-medium">{step.title}</span>
-              </li>
-              <div className="flex gap-4">
-                {index < array.length - 1 && (
-                  <div
-                    className="flex justify-center"
-                    style={{
-                      paddingInlineStart: "1.25rem",
-                    }}
-                  >
-                    <Separator
-                      orientation="vertical"
-                      className={`w-[1px] h-full ${
-                        index < stepper.current.index
-                          ? "bg-primary"
-                          : "bg-muted"
-                      }`}
-                    />
-                  </div>
-                )}
-                <div className="flex-1 my-4">
-                  {stepper.current.id === step.id &&
-                    stepper.switch({
-                      Friends: () => (
-                        <FriendsComponent
-                          friends={friends}
-                          selected={selected}
-                          setSelected={setSelected}
-                          stepper={stepper}
-                        />
-                      ),
-                      payment: () => (
-                        <PaymentComponent
-                          totalBalance={totalBalance}
-                          setTotalBalance={setTotalBalance}
-                          paymentMethod={paymentMethod}
-                          setPaymentMethod={setPaymentMethod}
-                          installmentValue={installmentValue}
-                          setInstallmentValue={setInstallmentValue}
-                        />
-                      ),
-                      Date: () => (
-                        <DateComponent date={dueDate} setDate={SetDueDate} />
-                      ),
-                      complete: () => (
-                        <CompleteComponent
-                          selected={selected}
-                          totalBalance={totalBalance}
-                          paymentMethod={paymentMethod}
-                          installmentValue={installmentValue}
-                          dueDate={dueDate}
-                          terms={generateTerms()}
-                        />
-                      ),
-                    })}
-                </div>
-              </div>
-            </React.Fragment>
-          ))}
-        </ol>
-      </nav>
-      <div className="space-y-4">
-        {!stepper.isLast ? (
-          <div className="flex justify-end gap-4">
-            <Button
-              variant="secondary"
-              onClick={stepper.prev}
-              disabled={stepper.isFirst}
-            >
-              Back
-            </Button>
-            <Button onClick={stepper.next}>
-              {stepper.isLast ? "Complete" : "Next"}
-            </Button>
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="space-y-6 p-6 border rounded-lg w-[450px]">
+        <div className="flex justify-between">
+          <h2 className="text-lg font-medium">Checkout</h2>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">
+              Step {stepper.current.index + 1} of {steps.length}
+            </span>
+            <div />
           </div>
-        ) : (
-          <Button onClick={stepper.reset}>Reset</Button>
-        )}
+        </div>
+        <nav aria-label="Checkout Steps" className="group my-4">
+          <ol className="flex flex-col gap-2" aria-orientation="vertical">
+            {stepper.all.map((step, index, array) => (
+              <React.Fragment key={step.id}>
+                <li className="flex items-center gap-4 flex-shrink-0">
+                  <Button
+                    type="button"
+                    role="tab"
+                    variant={
+                      index <= stepper.current.index ? "default" : "secondary"
+                    }
+                    aria-current={
+                      stepper.current.id === step.id ? "step" : undefined
+                    }
+                    aria-posinset={index + 1}
+                    aria-setsize={steps.length}
+                    aria-selected={stepper.current.id === step.id}
+                    className="flex size-10 items-center justify-center rounded-full"
+                    onClick={() => stepper.goTo(step.id)}
+                  >
+                    {index + 1}
+                  </Button>
+                  <span className="text-sm font-medium">{step.title}</span>
+                </li>
+                <div className="flex gap-4">
+                  {index < array.length - 1 && (
+                    <div
+                      className="flex justify-center"
+                      style={{
+                        paddingInlineStart: "1.25rem",
+                      }}
+                    >
+                      <Separator
+                        orientation="vertical"
+                        className={`w-[1px] h-full ${
+                          index < stepper.current.index
+                            ? "bg-primary"
+                            : "bg-muted"
+                        }`}
+                      />
+                    </div>
+                  )}
+                  <div className="flex-1 my-4">
+                    {stepper.current.id === step.id &&
+                      stepper.switch({
+                        Friends: () => (
+                          <FriendsComponent
+                            friends={friends}
+                            selected={selected}
+                            setSelected={setSelected}
+                            stepper={stepper}
+                          />
+                        ),
+                        payment: () => (
+                          <PaymentComponent
+                            totalBalance={totalBalance}
+                            setTotalBalance={setTotalBalance}
+                            paymentMethod={paymentMethod}
+                            setPaymentMethod={setPaymentMethod}
+                            installmentValue={installmentValue}
+                            setInstallmentValue={setInstallmentValue}
+                          />
+                        ),
+                        Date: () => (
+                          <DateComponent dueDate={dueDate} setDueDate={SetDueDate} />
+                        ),
+                        complete: () => (
+                          <CompleteComponent
+                            selected={selected}
+                            totalBalance={totalBalance}
+                            paymentMethod={paymentMethod}
+                            installmentValue={installmentValue}
+                            dueDate={dueDate}
+                            // terms={TermsAndConditionsModal}
+                            // onComplete={() => alert("Loan request completed!")}
+                          />
+                        ),
+                      })}
+                  </div>
+                </div>
+              </React.Fragment>
+            ))}
+          </ol>
+        </nav>
+        <div className="space-y-4">
+          {!stepper.isLast ? (
+            <div className="flex justify-end gap-4">
+              <Button
+                variant="secondary"
+                onClick={stepper.prev}
+                disabled={stepper.isFirst}
+              >
+                Back
+              </Button>
+              <Button onClick={stepper.next}>
+                {stepper.isLast ? "Complete" : "Next"}
+              </Button>
+            </div>
+          ) : (
+            <Button onClick={stepper.reset}>Reset</Button>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -372,46 +370,30 @@ const PaymentComponent = ({
   );
 };
 
-// const DateComponent = ({ date, setDate }) => (
-//   <Popover>
-//     <PopoverTrigger asChild>
-//       <Button
-//         variant={"outline"}
-//         className={cn(
-//           "w-[280px] justify-start text-left font-normal",
-//           !date && "text-muted-foreground"
-//         )}
-//       >
-//         <CalendarIcon />
-//         {date ? format(date, "PPP") : <span>Pick a date</span>}
-//       </Button>
-//     </PopoverTrigger>
-//     <PopoverContent className="w-auto p-0">
-//       <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
-//     </PopoverContent>
-//   </Popover>
-// );
 
-const DateComponent = () => {
-  const [date, setDate] = useState(null);
-  //const [duedate, setDueDate] = useState(null);
-
+const DateComponent = ({ dueDate, setDueDate }) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={"outline"}
-          className={cn("w-[280px] justify-start text-left font-normal", !date && "text-muted-foreground")}
+          variant="outline"
+          className={cn(
+            "w-[280px] justify-start text-left font-normal",
+            !dueDate && "text-muted-foreground"
+          )}
         >
-          <CalendarIcon />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
+          <CalendarIcon className="mr-2" />
+          {dueDate ? format(dueDate, "PPP") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
-        <Calendar
+        <DayPicker
           mode="single"
-          selected={date}
-          onSelect={setDate}
+          selected={dueDate}
+          //onSelect={setDueDate} // Update the parent state with the selected date
+          onSelect={(date) => {
+            setDueDate(date);
+          }}
           initialFocus
         />
       </PopoverContent>
@@ -425,6 +407,7 @@ const CompleteComponent = ({
   paymentMethod,
   installmentValue,
   dueDate,
+  //terms, onComplete,
 }) => (
   <div className="py-4">
     <h3 className="text-lg font-medium">Salifny Request: </h3>
@@ -438,3 +421,119 @@ const CompleteComponent = ({
     {/* <p className="text-sm">{terms || "Default terms and conditions."}</p> */}
   </div>
 );
+
+// const CompleteComponent = ({
+//   selected,
+//   totalBalance,
+//   paymentMethod,
+//   installmentValue,
+//   dueDate,
+//   terms,
+//   onComplete,
+// }) => {
+//   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+//   const [termsAccepted, setTermsAccepted] = useState(false);
+
+//   const handleOpenTermsModal = () => setIsTermsModalOpen(true);
+//   const handleCloseTermsModal = () => setIsTermsModalOpen(false);
+//   const handleAcceptTerms = () => {
+//     setTermsAccepted(true);
+//     handleCloseTermsModal();
+//   };
+
+//   const handleComplete = () => {
+//     if (termsAccepted) {
+//       onComplete();
+//     } else {
+//       handleOpenTermsModal();
+//     }
+//   };
+
+//   return (
+//     <div className="py-4">
+//       <h3 className="text-lg font-medium">Loan Request: </h3>
+//       <p>Friend: {selected?.name}</p>
+//       <p>Payment Method: {paymentMethod}</p>
+//       {paymentMethod === "installment" && <p>Installments: {installmentValue}</p>}
+//       <p>Total Balance: {totalBalance}</p>
+//       <p>Due Date: {format(dueDate, "PPP")}</p>
+//       <Button onClick={handleComplete} disabled={!termsAccepted}>
+//         Complete Request
+//       </Button>
+
+//       <TermsAndConditionsModal
+//         isOpen={isTermsModalOpen}
+//         onClose={handleCloseTermsModal}
+//         terms={terms}
+//         onAccept={handleAcceptTerms}
+//       />
+//     </div>
+//   );
+// };
+
+// const CompleteComponent = ({
+//   selected,
+//   totalBalance,
+//   paymentMethod,
+//   installmentValue,
+//   dueDate,
+//   terms,
+//   onComplete,
+// }) => {
+//   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+//   const [termsAccepted, setTermsAccepted] = useState(false);
+
+//   const handleOpenTermsModal = () => setIsTermsModalOpen(true);
+//   const handleCloseTermsModal = () => setIsTermsModalOpen(false);
+//   const handleAcceptTerms = () => {
+//     setTermsAccepted(true);
+//     setIsTermsModalOpen(false);
+//   };
+
+//   const handleComplete = () => {
+//     if (!termsAccepted) {
+//       alert("You must accept the terms and conditions.");
+//       return;
+//     }
+//     onComplete();
+//   };
+
+//   return (
+//     <div className="py-4">
+//       <h3 className="text-lg font-medium">Loan Request Summary:</h3>
+//       <p>Friend: {selected?.name}</p>
+//       <p>Payment Method: {paymentMethod}</p>
+//       {paymentMethod === "installment" && <p>Installments: {installmentValue}</p>}
+//       <p>Loan Amount: {totalBalance}</p>
+//       <p>Due Date: {dueDate ? format(dueDate, "PPP") : "No due date selected"}</p>
+
+//       <p className="text-sm font-medium mt-4">Terms and Conditions:</p>
+//       <p className="text-sm">{terms || "Default terms and conditions."}</p>
+
+//       <div className="flex justify-end">
+//         <Button
+//           onClick={handleOpenTermsModal}
+//           variant="secondary"
+//           disabled={termsAccepted}
+//         >
+//           Review Terms
+//         </Button>
+//         <Button
+//           onClick={handleComplete}
+//           disabled={!termsAccepted}
+//         >
+//           Complete
+//         </Button>
+//       </div>
+
+//       {/* Modal for terms acceptance */}
+//       {isTermsModalOpen && (
+//         <TermsAndConditionsModal
+//           terms={terms}
+//           onAccept={handleAcceptTerms}
+//           onClose={handleCloseTermsModal}
+//         />
+//       )}
+//     </div>
+//   );
+// };
