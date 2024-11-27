@@ -36,6 +36,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getWallet } from "@/actions/users";
+import { getAllUsers } from "@/actions/users";
 
 export function Wallet() {
   const { toast } = useToast();
@@ -268,8 +269,33 @@ function CopyIcon(props) {
 
 
 export function TransferDialog( { bankAccounts}) {
+  const [users, setUsers] = useState([]); // State to store fetched users
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setIsLoading(true); // Start loading
+      try {
+        const fetchedUsers = await getAllUsers();
+        setUsers(fetchedUsers); // Set fetched users to state
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      } finally {
+        setIsLoading(false); // Stop loading
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  const filteredFriends = users.filter(
+    (user) =>
+      user.firstName.toLowerCase().includes(query.toLowerCase()) ||
+      user.lastName.toLowerCase().includes(query.toLowerCase()) ||
+      user.email.toLowerCase().includes(query.toLowerCase())
+  );
+
   return (
-    <Dialog >
+    <Dialog>
       <DialogTrigger>
         <Button variant="outline">Transfer</Button>
         <DialogContent>
@@ -279,7 +305,6 @@ export function TransferDialog( { bankAccounts}) {
           </DialogHeader>
           <DialogContent >
             <Label htmlFor="recipient">Sender</Label>
-            <Input type="text" id="sender" />
             <Select >
               <SelectTrigger>
                 <SelectValue>Select Account</SelectValue>
@@ -293,8 +318,25 @@ export function TransferDialog( { bankAccounts}) {
               </SelectContent>
             </Select>
             <Label htmlFor="recipient">Recipient</Label>
-            <Input type="text" id="recipient" />
-            <Label htmlFor="amount">Amount</Label>
+            <Select >
+              <SelectTrigger>
+                <SelectValue>Select Account</SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+              <SelectGroup label="Friends">
+                {filteredFriends.length > 0 ? (
+                  filteredFriends.map((friend, index) => (
+                    <SelectItem key={index} value={friend.id}>
+                      {friend.firstName + friend.lastName}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <div className="p-2 text-muted-foreground">No friends found</div>
+                )}
+              </SelectGroup>
+              </SelectContent>
+            </Select>
+            <Label htmlFor="amount">{}</Label>
             <Input type="number" id="amount" />
 
             <div className="flex flex-row justify-between">

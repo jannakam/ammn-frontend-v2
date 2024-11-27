@@ -85,7 +85,6 @@ export function Friends() {
                 <AvatarFallback>{friend.fallback}</AvatarFallback>
               </Avatar>
               <div className="flex flex-col flex-grow">
-                <div className="font-medium">{friend.name}</div>
                 <div className="text-sm text-muted-foreground">
                   {friend.firstName + friend.lastName}
                 </div>
