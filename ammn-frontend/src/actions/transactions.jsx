@@ -123,13 +123,14 @@ export const addFundsToGityaAccount = async (formData) => {
     return false;
   }
 };
-export const joinGatiyaAccount = async (formData) => {
-  const userData = Object.fromEntries(formData);
+export const joinGatiyaAccount = async (inviteCode) => {
+  const data = { inviteCode: inviteCode };
+
   try {
     const response = await fetch(`${baseUrl}/users/join`, {
       method: "POST",
       headers: await getHeaders(),
-      body: JSON.stringify(userData),
+      body: JSON.stringify(data), // Send the object as JSON
     });
 
     if (!response.ok) {

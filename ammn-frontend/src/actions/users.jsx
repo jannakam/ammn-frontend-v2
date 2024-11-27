@@ -63,14 +63,11 @@ export const findUserByEmail = async (data) =>
   );
 
 export const createGityaAccount = async (accountData) => {
-  const response = await fetch(
-    `${baseUrl}/users/createGityaAcount`,
-    {
-      method: "POST",
-      headers: await getHeaders(),
-      body: JSON.stringify(accountData),
-    }
-  );
+  const response = await fetch(`${baseUrl}/users/createGityaAcount`, {
+    method: "POST",
+    headers: await getHeaders(),
+    body: JSON.stringify(accountData),
+  });
 
   if (!response.ok) {
     return Promise.reject(`Error creating account: ${response.statusText}`);
@@ -80,27 +77,3 @@ export const createGityaAccount = async (accountData) => {
   revalidatePath("/users");
   return response.json();
 };
-
-
-export const joinGatiyaAccount = async (formData) => {
-  const userData = Object.fromEntries(formData);
-  try {
-    const response = await fetch(`${baseUrl}/users/join`, {
-      method: "POST",
-      headers: await getHeaders(),
-      body: JSON.stringify(userData),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || response.statusText);
-    }
-
-    const newGatiyaAccount = await response.json(); // Parse the response data
-    return newGatiyaAccount; // Return the Gatiya account data
-  } catch (error) {
-    console.error("Error in joinGatiyaAccount:", error);
-    throw error;
-  }
-}; 
-
