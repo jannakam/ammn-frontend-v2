@@ -93,7 +93,7 @@ export function Wallet() {
       <CardHeader>
         <CardTitle className="text-4xl">Welcome Back!</CardTitle>
       </CardHeader>
-      <Card className="h-auto overflow-scroll z-10 backdrop-blur-lg bg-background/70">
+      <Card className="h-auto overflow-scroll z-10 backdrop-blur-lg bg-background/40">
         <CardHeader className="bg-background">
           <CardTitle>Wallet</CardTitle>
           <CardDescription>Manage your personal funds</CardDescription>
