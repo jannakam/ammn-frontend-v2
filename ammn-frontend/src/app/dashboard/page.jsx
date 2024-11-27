@@ -35,11 +35,12 @@ export default function Dashboard() {
         </div>
 
         {/* WALLET CELL */}
+        
         <div className="col-span-6 row-span-8 grid grid-cols-subgrid grid-rows-subgrid max-md:col-span-full max-md:grid-rows-none max-md:gap-4">
           <div className="col-span-6 row-span-8 max-md:col-span-full">
-            <div className="box border size-full overflow-hidden">
-              <div className="size-full">
-                <Wallet />
+            <div className="box border size-full overflow-hidden rounded-none">
+              <div className="relative flex size-full flex-col justify-center gap-2 overflow-hidden">
+                <Wallet/>
               </div>
             </div>
           </div>
