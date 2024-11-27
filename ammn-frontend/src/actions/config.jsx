@@ -1,6 +1,6 @@
 import { getToken } from "./token";
 
-const baseUrl = "http://localhost:8082";
+const baseUrl = "http://localhost:8080";
 
 async function getHeaders({ auth = true, contentType = true } = {}) {
   const token = await getToken();
