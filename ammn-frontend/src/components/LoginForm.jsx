@@ -1,6 +1,9 @@
 "use client";
 
+<<<<<<< HEAD
 import { login } from "@/actions/auth";
+=======
+>>>>>>> 85e24f82d0eae8c2b508b29d3b25ea99112dd0db
 import { AutoForm, AutoFormSubmit } from "@/components/ui/auto-form";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -9,10 +12,14 @@ import { LoaderCircle } from "lucide-react";
 import { redirect, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+<<<<<<< HEAD
+=======
+import { login } from "@/actions/auth";
+>>>>>>> 85e24f82d0eae8c2b508b29d3b25ea99112dd0db
 import * as z from "zod";
 
 const formSchema = z.object({
-  username: z
+  email: z
     .string({
       required_error: "Username is required.",
     })
@@ -76,7 +83,14 @@ function LoginForm() {
           },
         }}
       >
+<<<<<<< HEAD
         <AutoFormSubmit className={"w-full"} disabled={isLoading}>
+=======
+        <AutoFormSubmit
+          className={"w-full bg-primary hover:bg-accent"}
+          disabled={isLoading}
+        >
+>>>>>>> 85e24f82d0eae8c2b508b29d3b25ea99112dd0db
           {isLoading ? (
             <LoaderCircle className="h-6 w-6 animate-spin" />
           ) : (

@@ -3,9 +3,7 @@
 import { Dock } from "@/components/Dock";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { Wallet } from "@/components/Wallet";
-import { Power } from "lucide-react";
 import { Friends } from "@/components/Friends";
-import Image from "next/image";
 import { Salifny } from "@/components/Salifny";
 import { Gatiya } from "@/components/Gatiya";
 import { Logo } from "@/components/Logo";

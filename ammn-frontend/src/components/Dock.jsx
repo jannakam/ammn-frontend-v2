@@ -1,37 +1,125 @@
-import React from "react";
+import React, { useState } from "react";
 import { FloatingDock } from "@/components/ui/floating-dock";
+import { HeartHandshake, Home, User, Users, Star } from "lucide-react";
+
 import {
-  Home,
-  LayoutDashboard,
-  User
-} from "lucide-react";
-import Image from "next/image";
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "./ui/dialog";
+
+import ProfileModal from "@/components/modals/ProfileModal";
+import FriendsModal from "@/components/modals/FriendsModal";
+import SalifnyModal from "@/components/modals/SalifnyModal";
+import GatiyaModal from "@/components/modals/GatiyaModal";
 
 export function Dock() {
+  const [activeModal, setActiveModal] = useState(null);
+
   const links = [
     {
       title: "Home",
       icon: <Home className="h-full w-full" />,
-      href: "#",
-    },
-    {
-      title: "Components",
-      icon: <LayoutDashboard className="h-full w-full" />,
-      href: "#",
+      href: "/",
+      modal: null, // No modal for Home
     },
     {
       title: "Profile",
       icon: <User className="h-full w-full" />,
       href: "#",
+      modal: (
+        <Dialog>
+          <DialogTrigger asChild>
+            <button
+              onClick={() => setActiveModal("profile")}
+              className="h-10 w-10 flex items-center justify-center rounded-full"
+            >
+              <User className="h-full w-full" />
+            </button>
+          </DialogTrigger>
+          <DialogContent className="max-w-[50rem] max-h-[41rem] w-full h-full">
+            <ProfileModal onClose={() => setActiveModal(null)} />
+          </DialogContent>
+        </Dialog>
+      ),
+    },
+    {
+      title: "Friends",
+      icon: <Star className="h-full w-full" />,
+      href: "#",
+      modal: (
+        <Dialog>
+          <DialogTrigger asChild>
+            <button
+              onClick={() => setActiveModal("friends")}
+              className="h-10 w-10 flex items-center justify-center rounded-full"
+            >
+              <Star className="h-full w-full" />
+            </button>
+          </DialogTrigger>
+          <DialogContent className="max-w-[50rem] max-h-[41rem] w-full h-full">
+            <FriendsModal onClose={() => setActiveModal(null)} />
+          </DialogContent>
+        </Dialog>
+      ),
+    },
+    {
+      title: "Salifny",
+      icon: <HeartHandshake className="h-full w-full" />,
+      href: "#",
+      modal: (
+        <Dialog>
+          <DialogTrigger asChild>
+            <button
+              onClick={() => setActiveModal("salifny")}
+              className="h-10 w-10 flex items-center justify-center rounded-full"
+            >
+              <HeartHandshake className="h-full w-full" />
+            </button>
+          </DialogTrigger>
+          <DialogContent className="max-w-[50rem] max-h-[41rem] w-full h-full">
+            <SalifnyModal onClose={() => setActiveModal(null)} />
+          </DialogContent>
+        </Dialog>
+      ),
+    },
+    {
+      title: "Gatiya",
+      icon: <Users className="h-full w-full" />,
+      href: "#",
+      modal: (
+        <Dialog>
+          <DialogTrigger asChild>
+            <button
+              onClick={() => setActiveModal("gatiya")}
+              className="h-10 w-10 flex items-center justify-center rounded-full"
+            >
+              <Users className="h-full w-full" />
+            </button>
+          </DialogTrigger>
+          <DialogContent className="max-w-[50rem] max-h-[41rem] w-full h-full">
+            <GatiyaModal onClose={() => setActiveModal(null)} />
+          </DialogContent>
+        </Dialog>
+      ),
     },
   ];
 
   return (
-    <div className="fixed flex items-center justify-center h-[35rem] w-full z-40">
+    <div className="fixed flex items-center justify-center w-full z-40">
       <FloatingDock
-        // only for demo, remove for production
-        mobileClassName="translate-y-20"
-        items={links}
+        items={links.map((link) => ({
+          title: link.title,
+          icon: link.modal || (
+            <a
+              href={link.href}
+              className="h-10 w-10 flex items-center justify-center rounded-full"
+            >
+              {link.icon}
+            </a>
+          ), // Render icon as a link for "Home"
+          href: link.href,
+        }))}
       />
     </div>
   );

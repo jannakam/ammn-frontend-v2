@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Pencil } from 'lucide-react';
+import { Pencil, Forward } from "lucide-react";
+import Image from "next/image";
+
 import {
   Card,
   CardContent,
@@ -22,26 +24,27 @@ export function Wallet() {
       name: "Savings",
       accountNumber: "**** **** **** 1234",
       expirationDate: "5/25",
-      img: "/images/savings.png",
+      img: "/cards/card1.png",
       isEditing: false,
     },
     {
       name: "Gifts",
       accountNumber: "**** **** **** 9012",
       expirationDate: "8/28",
-      img: "/images/gifts.png",
+      img: "/cards/card2.png",
       isEditing: false,
     },
     {
       name: "Salary",
       accountNumber: "**** **** **** 3456",
       expirationDate: "7/27",
-      img: "/images/salary.png",
+      img: "/cards/card3.png",
       isEditing: false,
     },
   ]);
 
   const email = "jannakalmuqaisib@gmail.com";
+  const balance = "1,287,756 KWD";
 
   const toggleEdit = (index) => {
     const updatedAccounts = bankAccounts.map((account, i) =>
@@ -65,18 +68,18 @@ export function Wallet() {
   };
 
   return (
-    <Card className="h-full overflow-scroll">
-      <CardHeader>
+    <Card className="h-full overflow-scroll z-10 backdrop-blur-lg bg-background/70">
+      <CardHeader className="bg-background mb-5">
         <CardTitle>Wallet</CardTitle>
         <CardDescription>Manage your personal funds</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="max-w-md mx-auto p-4">
+        <div className="mx-auto p-4">
           <div className="flex items-center justify-end mb-4">
             <Badge variant="secondary">Silver</Badge>
           </div>
           <div className="text-center mb-4">
-            <div className="text-5xl font-bold text-primary">1,287,756 KWD</div>
+            <div className="text-5xl font-bold text-accent">{balance}</div>
             <div className="text-muted-foreground flex items-center justify-center">
               {email}{" "}
               <CopyIcon
@@ -84,10 +87,6 @@ export function Wallet() {
                 onClick={copyToClipboard}
               />
             </div>
-          </div>
-          <div className="flex justify-center space-x-2 mb-4">
-            <Button variant="outline">Receive</Button>
-            <Button variant="outline">Send</Button>
           </div>
           <div>
             <div className="space-y-4">
@@ -97,10 +96,9 @@ export function Wallet() {
                   className="flex items-center justify-between px-4 py-3 border border-muted rounded-md"
                 >
                   <div className="flex items-center space-x-4">
-                    <Avatar>
-                      <AvatarImage src={account.img} alt={account.name} />
-                      <AvatarFallback>{account.name[0]}</AvatarFallback>
-                    </Avatar>
+                    <div className="w-[120px] h-[80px] overflow-hidden">
+                      <Image src={account.img} alt={account.name} width={120} height={80} className="shadow"/>
+                    </div>
                     <div className="flex items-center space-x-2">
                       {account.isEditing ? (
                         <input
@@ -126,8 +124,11 @@ export function Wallet() {
                     <div className="text-muted-foreground text-sm">
                       {account.accountNumber}
                     </div>
-                    <div className="text-primary font-medium">
+                    <div className="text-primary font-medium gap-2 flex justify-between">
                       {account.expirationDate}
+                      <Button variant="outline" size="icon" className="h-6 w-6 p-1">
+                        <Forward />
+                      </Button>
                     </div>
                   </div>
                 </Card>
