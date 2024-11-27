@@ -5,6 +5,7 @@ import { baseUrl, getHeaders } from "./config";
 
 export const myTransactions = async () => {
   const response = await fetch(`${baseUrl}/wallet/transactions`, {
+    method: "GET",
     headers: await getHeaders(),
   });
   const transactions = await response.json();
