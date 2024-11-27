@@ -99,9 +99,12 @@ export default function FriendPicklist() {
                   </div>
                 </ScrollArea>
               </div>
-              <div className="flex justify-start">
+              <div className="flex justify-between">
                 <Button variant="outline" onClick={() => setShowSummary(false)}>
                   Back
+                </Button>
+                <Button variant="outline">
+                  Confirm
                 </Button>
               </div>
             </div>

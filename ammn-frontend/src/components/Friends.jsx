@@ -25,7 +25,7 @@ export function Friends() {
   
     return (
       <Card className="h-full overflow-scroll z-10 backdrop-blur-lg bg-background/70">
-        <CardHeader className="sticky top-0 z-10 bg-background mb-5">
+        <CardHeader className="sticky top-0 z-10 bg-background mb-2">
           <CardTitle>Friends</CardTitle>
           <CardDescription>Find and add friends</CardDescription>
           <div className="flex flex-row gap-2">
@@ -36,9 +36,9 @@ export function Friends() {
               onChange={(e) => setQuery(e.target.value)}
               className="relative z-10 active:border-primary"
             />
-            <Button variant="outline" size="sm" className="z-10">
+            {/* <Button variant="outline" size="sm" className="z-10">
               <PlusIcon />
-            </Button>
+            </Button> */}
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
