@@ -15,19 +15,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -36,8 +25,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getWallet } from "@/actions/users";
-import { getAllUsers } from "@/actions/users";
 
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { getAllUsers } from "@/actions/users";
+import { transfer } from "@/actions/transactions";
+import { TransferDialog } from "./TransferDialog";
 export function Wallet() {
   const { toast } = useToast();
 
@@ -111,9 +111,7 @@ export function Wallet() {
   }, []);
 
   if (isLoading) {
-    return (
-      <div className="text-center text-muted-foreground">Loading...</div>
-    );
+    return <div className="text-center text-muted-foreground">Loading...</div>;
   }
 
   if (!wallet) {
@@ -149,23 +147,20 @@ export function Wallet() {
 
   return (
     <Card className="h-full bg-none border-none">
-    <Card className="h-auto overflow-scroll z-10 backdrop-blur-lg bg-background/70">
-      <CardHeader>
-        <CardTitle className="text-4xl">
-          <div>
-          Welcome Back, {' '}
-          <span className="text-destructive">
-          {wallet.user.firstName}!
-          </span>
-          </div>
-        </CardTitle>
-      </CardHeader>
-      <CardHeader className="bg-background mb-5">
-        <CardTitle>Wallet</CardTitle>
-        <CardDescription>Manage your personal funds</CardDescription>
-      </CardHeader>
-      <CardContent>
-        
+      <Card className="h-auto overflow-scroll z-10 backdrop-blur-lg bg-background/70">
+        <CardHeader>
+          <CardTitle className="text-4xl">
+            <div>
+              Welcome Back,{" "}
+              <span className="text-destructive">{wallet.user.firstName}!</span>
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardHeader className="bg-background mb-5">
+          <CardTitle>Wallet</CardTitle>
+          <CardDescription>Manage your personal funds</CardDescription>
+        </CardHeader>
+        <CardContent>
           <div className="mx-auto p-4">
             <div className="flex items-center justify-end mb-4">
               <Badge variant="secondary">Silver</Badge>
@@ -182,11 +177,11 @@ export function Wallet() {
                 />
               </div>
               <div className="flex flex-row justify-between">
-              <TransferDialog bankAccounts={bankAccounts}/>
-              <Button variant="outline">View Transactions</Button>
+                <TransferDialog />
+                <Button variant="outline">View Transactions</Button>
+              </div>
             </div>
-            </div>
-            
+
             <div>
               <div className="space-y-4">
                 {bankAccounts.map((account, index) => (
@@ -240,8 +235,7 @@ export function Wallet() {
               </div>
             </div>
           </div>
-        
-      </CardContent>
+        </CardContent>
       </Card>
     </Card>
   );
@@ -265,88 +259,5 @@ function CopyIcon(props) {
       <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
     </svg>
   );
-}
-
-
-export function TransferDialog( { bankAccounts}) {
-  const [users, setUsers] = useState([]); // State to store fetched users
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setIsLoading(true); // Start loading
-      try {
-        const fetchedUsers = await getAllUsers();
-        setUsers(fetchedUsers); // Set fetched users to state
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      } finally {
-        setIsLoading(false); // Stop loading
-      }
-    };
-
-    fetchUsers();
-  }, []);
-
-  const filteredFriends = users.filter(
-    (user) =>
-      user.firstName.toLowerCase().includes(query.toLowerCase()) ||
-      user.lastName.toLowerCase().includes(query.toLowerCase()) ||
-      user.email.toLowerCase().includes(query.toLowerCase())
-  );
-
-  return (
-    <Dialog>
-      <DialogTrigger>
-        <Button variant="outline">Transfer</Button>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Transfer Funds</DialogTitle>
-            <DialogDescription>Transfer funds between accounts</DialogDescription>
-          </DialogHeader>
-          <DialogContent >
-            <Label htmlFor="recipient">Sender</Label>
-            <Select >
-              <SelectTrigger>
-                <SelectValue>Select Account</SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup label="Bank Accounts">
-                  {bankAccounts.map((account, index) => (
-                    <SelectItem key={index}>{account.name}</SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Label htmlFor="recipient">Recipient</Label>
-            <Select >
-              <SelectTrigger>
-                <SelectValue>Select Account</SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-              <SelectGroup label="Friends">
-                {filteredFriends.length > 0 ? (
-                  filteredFriends.map((friend, index) => (
-                    <SelectItem key={index} value={friend.id}>
-                      {friend.firstName + friend.lastName}
-                    </SelectItem>
-                  ))
-                ) : (
-                  <div className="p-2 text-muted-foreground">No friends found</div>
-                )}
-              </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Label htmlFor="amount">{}</Label>
-            <Input type="number" id="amount" />
-
-            <div className="flex flex-row justify-between">
-            <Button variant="outline">Cancel</Button>
-            <Button variant="primary">Transfer</Button>
-            </div>
-          </DialogContent>
-          
-        </DialogContent>
-      </DialogTrigger>
-    </Dialog>
-  )
+  // Import the transfer function
 }

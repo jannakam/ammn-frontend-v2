@@ -7,15 +7,28 @@ import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { defineStepper } from "@stepperize/react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+// Importing required functions
+import { getAllUsers } from "@/actions/users";
+import { salifny } from "@/actions/transactions";
 
 const { useStepper, steps } = defineStepper(
   {
@@ -33,33 +46,76 @@ const { useStepper, steps } = defineStepper(
     title: "Maturity Date",
     description: "Enter a Due Date for Loan",
   },
-  { id: "complete", title: "Complete", description: "Loan Request complete" }
+  {
+    id: "complete",
+    title: "Complete",
+    description: "Loan Request complete",
+  }
 );
 
 export default function Page() {
   const stepper = useStepper();
 
-  React.useEffect(() => {
-    const fetchFriends = async () => {
-      const response = await fetch("http://localhost:3000/dashboard/friends");
-      const data = await response.json();
-      const sortedFriends = data.sort((a, b) => a.name.localeCompare(b.name));
-      setFriends(sortedFriends);
-    };
-    fetchFriends();
-  }, []);
-
-  const [friends, setFriends] = React.useState([]);
-  const [selected, setSelected] = React.useState(null);
+  // State for managing users, form data, and UI state
+  const [users, setUsers] = React.useState([]);
+  const [selectedUserEmail, setSelectedUserEmail] = React.useState("");
   const [totalBalance, setTotalBalance] = React.useState("");
   const [paymentMethod, setPaymentMethod] = React.useState("onePayment");
   const [installmentValue, setInstallmentValue] = React.useState(2);
   const [dueDate, setDueDate] = React.useState(null);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+  // Fetch all users on component mount
+  React.useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const fetchedUsers = await getAllUsers(); // Fetch all users
+        const sortedUsers = fetchedUsers.sort((a, b) =>
+          a.firstName.localeCompare(b.firstName)
+        ); // Sort users alphabetically by first name
+        setUsers(sortedUsers);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  // Handle form submission
+  const handleSubmit = async () => {
+    if (!selectedUserEmail || !totalBalance) {
+      alert("Please select a user and enter an amount.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const formData = new FormData();
+      formData.append("email", selectedUserEmail); // Add email to FormData
+      formData.append("amount", totalBalance); // Add amount to FormData
+
+      const success = await salifny(formData); // Call salifny function with FormData
+
+      if (success) {
+        alert("Transaction completed successfully!");
+        stepper.reset(); // Reset the stepper after success
+        setSelectedUserEmail(""); // Reset selected user
+        setTotalBalance(""); // Reset amount
+        setDueDate(null); // Reset due date
+      } else {
+        alert("Transaction failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error completing transaction:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-[38rem] max-h-[38rem] w-full overflow-scroll p-6">
       <h2 className="text-2xl font-bold mb-4">Salifny</h2>
-
       <div className="space-y-6 p-6 border rounded-lg w-auto">
         <div className="flex justify-between">
           <h2 className="text-lg font-medium">Checkout</h2>
@@ -114,9 +170,9 @@ export default function Page() {
                       stepper.switch({
                         Friends: () => (
                           <FriendsComponent
-                            friends={friends}
-                            selected={selected}
-                            setSelected={setSelected}
+                            users={users}
+                            selectedUserEmail={selectedUserEmail}
+                            setSelectedUserEmail={setSelectedUserEmail}
                             stepper={stepper}
                           />
                         ),
@@ -138,7 +194,7 @@ export default function Page() {
                         ),
                         complete: () => (
                           <CompleteComponent
-                            selected={selected}
+                            selectedUserEmail={selectedUserEmail}
                             totalBalance={totalBalance}
                             paymentMethod={paymentMethod}
                             installmentValue={installmentValue}
@@ -167,7 +223,9 @@ export default function Page() {
               </Button>
             </div>
           ) : (
-            <Button onClick={stepper.reset}>Reset</Button>
+            <Button onClick={handleSubmit} disabled={isSubmitting}>
+              {isSubmitting ? "Processing..." : "Complete Transaction"}
+            </Button>
           )}
         </div>
       </div>
@@ -175,29 +233,39 @@ export default function Page() {
   );
 }
 
-const FriendsComponent = ({ friends, selected, setSelected, stepper }) => (
+const FriendsComponent = ({
+  users,
+  selectedUserEmail,
+  setSelectedUserEmail,
+  stepper,
+}) => (
   <div className="grid gap-4 w-full">
-    <h3 className="text-lg font-medium">Select a Friend</h3>
-    <RadioGroup
-      value={selected?.id || ""}
-      onValueChange={(value) => {
-        const friend = friends.find((f) => f.id === value);
-        setSelected(friend);
-      }}
+    <h3 className="text-lg font-medium">Select a User</h3>
+    {/* Dropdown for selecting users */}
+    <Label htmlFor="user-select" className="text-sm font-medium">
+      Choose a User:
+    </Label>
+    <select
+      id="user-select"
+      value={selectedUserEmail || ""}
+      onChange={(e) => setSelectedUserEmail(e.target.value)}
+      className="p-2 border rounded-md w-full"
     >
-      {friends.map((friend) => (
-        <div key={friend.id} className="flex items-center gap-2">
-          <RadioGroupItem id={`friend-${friend.id}`} value={friend.id} />
-          <Label htmlFor={`friend-${friend.id}`}>{friend.name}</Label>
-        </div>
+      <option value="" disabled>
+        Select a user...
+      </option>
+      {users.map((user) => (
+        <option key={user.id} value={user.email}>
+          {`${user.firstName} ${user.lastName}`}
+        </option>
       ))}
-    </RadioGroup>
-    <div className="flex justify-end">
+    </select>
+
+    {/* Next button */}
+    <div className="flex justify-end mt-4">
       <Button
-        onClick={() => {
-          if (selected) stepper.next();
-        }}
-        disabled={!selected}
+        onClick={() => selectedUserEmail && stepper.next()}
+        disabled={!selectedUserEmail}
       >
         Next
       </Button>
@@ -205,63 +273,22 @@ const FriendsComponent = ({ friends, selected, setSelected, stepper }) => (
   </div>
 );
 
-const PaymentComponent = ({
-  totalBalance,
-  setTotalBalance,
-  paymentMethod,
-  setPaymentMethod,
-  installmentValue,
-  setInstallmentValue,
-}) => (
+const PaymentComponent = ({ totalBalance, setTotalBalance }) => (
   <div className="grid gap-4">
-    <div className="grid gap-2">
-      <Label htmlFor="total-balance" className="text-sm font-medium">
-        Add Amount
-      </Label>
-      <Input
-        id="total-balance"
-        value={totalBalance}
-        onChange={(e) => setTotalBalance(e.target.value)}
-        placeholder="Enter total balance"
-        className="w-full"
-      />
-    </div>
-    <div className="grid gap-2">
-      <Label className="text-sm font-medium">Choose Payment Method</Label>
-      <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <RadioGroupItem id="onePayment" value="onePayment" />
-            <Label htmlFor="onePayment">One Payment</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <RadioGroupItem id="installment" value="installment" />
-            <Label htmlFor="installment">Installments</Label>
-          </div>
-        </div>
-      </RadioGroup>
-    </div>
-    {paymentMethod === "installment" && (
-      <div className="grid gap-2">
-        <Label className="text-sm font-medium">Choose Installments</Label>
-        <RadioGroup
-          value={installmentValue.toString()}
-          onValueChange={(value) => setInstallmentValue(Number(value))}
-        >
-          <div className="flex gap-4">
-            {[2, 3, 4].map((value) => (
-              <div key={value} className="flex items-center gap-2">
-                <RadioGroupItem id={`installment-${value}`} value={value.toString()} />
-                <Label htmlFor={`installment-${value}`}>{value} months</Label>
-              </div>
-            ))}
-          </div>
-        </RadioGroup>
-      </div>
-    )}
+    {/* Input for entering amount */}
+    <Label htmlFor="amount-input" className="text-sm font-medium mt-4">
+      Enter Amount:
+    </Label>
+    <Input
+      id="amount-input"
+      type="number"
+      placeholder="Enter amount"
+      value={totalBalance}
+      onChange={(e) => setTotalBalance(e.target.value)}
+      className="w-full"
+    />
   </div>
 );
-
 const DatePickerComponent = ({ dueDate, setDueDate }) => (
   <Popover>
     <PopoverTrigger asChild>
@@ -301,7 +328,9 @@ const CompleteComponent = ({
 }) => (
   <Card className="mt-4">
     <CardHeader>
-      <CardTitle className="text-lg font-medium">Salifny Request Summary</CardTitle>
+      <CardTitle className="text-lg font-medium">
+        Salifny Request Summary
+      </CardTitle>
       <CardDescription>Review your loan request details</CardDescription>
     </CardHeader>
     <CardContent>
@@ -326,7 +355,9 @@ const CompleteComponent = ({
         </div>
         <div className="flex justify-between">
           <span className="font-semibold">Due Date:</span>
-          <span>{dueDate ? format(dueDate, "PPP") : "No due date selected"}</span>
+          <span>
+            {dueDate ? format(dueDate, "PPP") : "No due date selected"}
+          </span>
         </div>
       </div>
     </CardContent>

@@ -50,7 +50,7 @@ export const transfer = async (formData) => {
 
   try {
     const response = await fetch(`${baseUrl}/wallet/transactions/transfer`, {
-      method: "PUT",
+      method: "POST",
       headers: await getHeaders(),
       body: JSON.stringify(userData),
     });
@@ -69,7 +69,7 @@ export const salifny = async (formData) => {
 
   try {
     const response = await fetch(`${baseUrl}/wallet/transactions/salfni`, {
-      method: "PUT",
+      method: "POST",
       headers: await getHeaders(),
       body: JSON.stringify(userData),
     });
