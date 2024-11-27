@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export function Logo({inverted = false}) {
   return (
-    <div>
+    <div className="z-40">
       <Image
         src="/logo_white.svg"
         alt="hero"

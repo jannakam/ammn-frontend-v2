@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -280,7 +281,7 @@ body {
 .loader {
   width: 48px;
   height: 48px;
-  border: 5px solid #fff;
+  border: 5px solid hsl(168, 34%, 50%);
   border-bottom-color: transparent;
   border-radius: 50%;
   display: inline-block;
@@ -296,3 +297,92 @@ body {
     transform: rotate(360deg);
   }
 }
+
+/* STACKED CARDS */
+.stacked-cards {
+  display: flex;
+}
+
+/* Individual Stacked Card */
+.stacked-card {
+  background: hsl(168, 34%, 50%); /* Matches --accent */
+  color: hsl(34, 28%, 87%); /* Matches --foreground */
+  min-width: 300px;
+  width: 300px;
+  min-height: 360px;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Soft shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  --distance: -130px;
+}
+
+/* Ensure spacing between cards */
+.stacked-card:not(:first-child) {
+  margin-left: var(--distance);
+}
+
+/* Hover and Focus Effects */
+.stacked-card:hover,
+.stacked-card:focus-within {
+  transform: translateY(-1rem);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhance shadow on hover */
+}
+
+.stacked-card:hover ~ .stacked-card,
+.stacked-card:focus-within ~ .stacked-card {
+  transform: translateX(calc(var(--distance) * -1));
+}
+
+/* Title Styling */
+.stacked-card h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.stacked-card h1 a {
+  text-decoration: none;
+  color: hsl(34, 28%, 87%); /* Matches --foreground */
+  font-family: "Noto Kufi Arabic", sans-serif;
+
+}
+
+.stacked-card h1 a:hover {
+  text-decoration: underline;
+}
+
+/* Content Styling */
+.stacked-card p {
+  font-size: 0.875rem; /* Small text size */
+  line-height: 1.5;
+  color: hsl(34, 28%, 87%); /* Matches --foreground */
+}
+
+
+/* BACKGROUND ANIMATION */
+
+@keyframes gradient-bg {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-bg {
+  background: linear-gradient(
+    -45deg,
+    hsl(var(--background)),
+    hsl(var(--secondary)),
+    hsl(var(--secondary)),
+    hsl(var(--accent))
+  );
+  background-size: 400% 400%;
+  animation: gradient-bg 15s ease infinite;
+}
+

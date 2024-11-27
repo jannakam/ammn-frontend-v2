@@ -14,7 +14,7 @@ import {
     ];
   
     return (
-      <Card className="h-full relative z-10 overflow-scroll backdrop-blur-lg bg-background/70"> 
+      <Card className="h-full relative z-10 overflow-scroll backdrop-blur-lg bg-background/40"> 
         <CardHeader className="bg-background mb-5">
           <CardTitle>Salifny</CardTitle>
           <CardDescription>
