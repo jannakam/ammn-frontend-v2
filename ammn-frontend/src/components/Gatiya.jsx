@@ -27,7 +27,8 @@ export function Gatiya() {
   ];
 
   return (
-    <Card className="h-full overflow-scroll backdrop-blur-lg bg-background/70">
+
+    <Card className="h-full overflow-scroll backdrop-blur-lg bg-background/40">
       <CardHeader className="sticky top-0 z-10 bg-background mb-5 flex flex-row justify-between">
         <div>
         <CardTitle>Gatiya</CardTitle>
