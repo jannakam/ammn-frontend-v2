@@ -7,6 +7,26 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Pencil, Forward } from "lucide-react";
 import Image from "next/image";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 import {
   Card,
@@ -73,7 +93,6 @@ export function Wallet() {
   // Fetch wallet data when component mounts
   useEffect(() => {
     const fetchWallet = async () => {
-      setIsLoading(true);
       try {
         const fetchedWallet = await getWallet();
         setWallet(fetchedWallet); // Set fetched wallet data to state
@@ -89,6 +108,20 @@ export function Wallet() {
 
     fetchWallet();
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="text-center text-muted-foreground">Loading...</div>
+    );
+  }
+
+  if (!wallet) {
+    return (
+      <div className="text-center text-muted-foreground">
+        No wallet data available.
+      </div>
+    );
+  }
 
   const toggleEdit = (index) => {
     const updatedAccounts = bankAccounts.map((account, i) =>
@@ -114,15 +147,24 @@ export function Wallet() {
   };
 
   return (
-    <Card className="h-full overflow-scroll z-10 backdrop-blur-lg bg-background/70">
+    <Card className="h-full bg-none border-none">
+    <Card className="h-auto overflow-scroll z-10 backdrop-blur-lg bg-background/70">
+      <CardHeader>
+        <CardTitle className="text-4xl">
+          <div>
+          Welcome Back, {' '}
+          <span className="text-destructive">
+          {wallet.user.firstName}!
+          </span>
+          </div>
+        </CardTitle>
+      </CardHeader>
       <CardHeader className="bg-background mb-5">
         <CardTitle>Wallet</CardTitle>
         <CardDescription>Manage your personal funds</CardDescription>
       </CardHeader>
       <CardContent>
-        {isLoading ? (
-          <div className="text-center text-muted-foreground">Loading...</div>
-        ) : wallet ? (
+        
           <div className="mx-auto p-4">
             <div className="flex items-center justify-end mb-4">
               <Badge variant="secondary">Silver</Badge>
@@ -131,14 +173,19 @@ export function Wallet() {
               <div className="text-5xl font-bold text-accent">
                 {wallet.balance.toLocaleString()} KWD
               </div>
-              <div className="text-muted-foreground flex items-center justify-center">
+              <div className="text-muted-foreground flex items-center justify-center mb-4">
                 {wallet.user.email}{" "}
                 <CopyIcon
                   className="inline-block w-4 h-4 cursor-pointer ml-2"
                   onClick={copyToClipboard}
                 />
               </div>
+              <div className="flex flex-row justify-between">
+              <TransferDialog bankAccounts={bankAccounts}/>
+              <Button variant="outline">View Transactions</Button>
             </div>
+            </div>
+            
             <div>
               <div className="space-y-4">
                 {bankAccounts.map((account, index) => (
@@ -185,13 +232,6 @@ export function Wallet() {
                       </div>
                       <div className="text-primary font-medium gap-2 flex justify-between">
                         {account.expirationDate}
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-6 w-6 p-1"
-                        >
-                          <Forward />
-                        </Button>
                       </div>
                     </div>
                   </Card>
@@ -199,12 +239,9 @@ export function Wallet() {
               </div>
             </div>
           </div>
-        ) : (
-          <div className="text-center text-muted-foreground">
-            No wallet data available.
-          </div>
-        )}
+        
       </CardContent>
+      </Card>
     </Card>
   );
 }
@@ -227,4 +264,47 @@ function CopyIcon(props) {
       <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
     </svg>
   );
+}
+
+
+export function TransferDialog( { bankAccounts}) {
+  return (
+    <Dialog >
+      <DialogTrigger>
+        <Button variant="outline">Transfer</Button>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Transfer Funds</DialogTitle>
+            <DialogDescription>Transfer funds between accounts</DialogDescription>
+          </DialogHeader>
+          <DialogContent >
+            <Label htmlFor="recipient">Sender</Label>
+            <Input type="text" id="sender" />
+            <Select >
+              <SelectTrigger>
+                <SelectValue>Select Account</SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup label="Bank Accounts">
+                  {bankAccounts.map((account, index) => (
+                    <SelectItem key={index}>{account.name}</SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <Label htmlFor="recipient">Recipient</Label>
+            <Input type="text" id="recipient" />
+            <Label htmlFor="amount">Amount</Label>
+            <Input type="number" id="amount" />
+
+            <div className="flex flex-row justify-between">
+            <Button variant="outline">Cancel</Button>
+            <Button variant="primary">Transfer</Button>
+            </div>
+          </DialogContent>
+          
+        </DialogContent>
+      </DialogTrigger>
+    </Dialog>
+  )
 }

@@ -9,6 +9,7 @@ import { Gatiya } from "@/components/Gatiya";
 import { Logo } from "@/components/Logo";
 import { Logout } from "@/components/Logout";
 import { Toaster } from "@/components/ui/toaster";
+import { DashboardButton } from "@/components/DashboardButton";
 
 export default function Dashboard() {
   return (
@@ -19,6 +20,7 @@ export default function Dashboard() {
         aria-hidden="true"
       ></div>
 
+      <DashboardButton />
       <Logout />
 
       {/* GRID STARTS */}

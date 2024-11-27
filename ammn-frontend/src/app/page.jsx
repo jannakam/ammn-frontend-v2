@@ -8,11 +8,13 @@ import HeroSection from "@/components/HeroSection";
 import { Team } from "@/components/Team";
 import { Logout } from "@/components/Logout";
 import { Slider } from "@/components/Slider";
+import { DashboardButton } from "@/components/DashboardButton";
 
 export default function Home() {
   return (
     <div >
       <Logo />
+    <DashboardButton /> 
       <Logout />
       {/* <HeroSection />
       <AuthSection />
