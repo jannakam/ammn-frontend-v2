@@ -1,18 +1,56 @@
-import Image from "next/image";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-
-export default function Page() {
+import { Pencil } from "lucide-react";
+import { getMyUser } from "@/actions/users";
+export default function ProfilePage() {
   const [profile, setProfile] = useState({
-    image:
-      "https://i.pinimg.com/736x/db/08/0f/db080fceb9fa616315bd6f9c3b8a9632.jpg",
-    name: "Nora Almarri",
-    email: "nora@nora.com",
-    phoneNumber: "51008484",
-    civilId: "296120400000",
+    firstName: "",
+    lastName: "",
+    email: "",
+    civilId: "",
+    phoneNumber: "",
   });
+
+  const [isEditing, setIsEditing] = useState({
+    firstName: false,
+    lastName: false,
+    email: false,
+    civilId: false,
+    phoneNumber: false,
+  });
+
+  const [isLoading, setIsLoading] = useState(false); // Loading state
+
+  // Fetch user data using getMyUser
+  useEffect(() => {
+    const fetchUser = async () => {
+      setIsLoading(true);
+      try {
+        const userData = await getMyUser(); // Assume getMyUser is passed as a prop
+        setProfile({
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          email: userData.email,
+          civilId: userData.civilId,
+          phoneNumber: userData.phoneNumber,
+        });
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [getMyUser]);
+
+  const handleEditToggle = (field) => {
+    setIsEditing((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,105 +66,142 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-[38rem] max-h-[38rem] w-full overflow-scroll p-6">
+    <div className="min-h-screen p-6">
       <h2 className="text-2xl font-bold mb-4">Profile</h2>
-      <div className="flex justify-center">
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">
-            <span className="text-foreground">Welcome </span>
-            <span className="text-accent">{profile.name}</span>
-          </CardTitle>
-        </CardHeader>
-
-        <CardContent>
-          <div className="flex flex-col items-center space-y-6">
-            {/* Profile Image */}
-            <div className="relative w-32 h-32 rounded-full overflow-hidden">
-              <Image
-                src={profile.image}
-                alt={`Profile picture of ${profile.name}`}
-                fill
-                className="object-cover"
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : (
+        <div className="space-y-6">
+          {/* First Name */}
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-muted-foreground">
+              First Name
+            </label>
+            {isEditing.firstName ? (
+              <Input
+                name="firstName"
+                value={profile.firstName}
+                onChange={handleChange}
+                onBlur={() => handleEditToggle("firstName")}
+                autoFocus
               />
-            </div>
-
-            {/* Editable Profile Fields */}
-            <div className="grid grid-cols-2 gap-4 w-full">
-              {/* Name Field */}
-              <div>
-                <label htmlFor="name" className="text-sm font-medium text-muted-foreground">
-                  Name
-                </label>
-                <Input
-                  id="name"
-                  name="name"
-                  value={profile.name}
-                  onChange={handleChange}
-                  placeholder="Enter your name"
-                  className="w-full"
+            ) : (
+              <div className="flex items-center gap-2">
+                <span>{profile.firstName}</span>
+                <Pencil
+                  className="w-4 h-4 cursor-pointer"
+                  onClick={() => handleEditToggle("firstName")}
                 />
               </div>
-
-              {/* Email Field */}
-              <div>
-                <label htmlFor="email" className="text-sm font-medium text-muted-foreground">
-                  Email
-                </label>
-                <Input
-                  id="email"
-                  name="email"
-                  value={profile.email}
-                  onChange={handleChange}
-                  placeholder="Enter your email"
-                  className="w-full"
-                />
-              </div>
-
-              {/* Phone Number Field */}
-              <div>
-                <label
-                  htmlFor="phoneNumber"
-                  className="text-sm font-medium text-muted-foreground"
-                >
-                  Phone Number
-                </label>
-                <Input
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  value={profile.phoneNumber}
-                  onChange={handleChange}
-                  placeholder="Enter your phone number"
-                  className="w-full"
-                />
-              </div>
-
-              {/* Civil ID Field (Full Width) */}
-              <div className="col-span-">
-                <label htmlFor="civilId" className="text-sm font-medium text-muted-foreground">
-                  Civil ID
-                </label>
-                <Input
-                  id="civilId"
-                  name="civilId"
-                  value={profile.civilId}
-                  onChange={handleChange}
-                  placeholder="Enter your Civil ID"
-                  className="w-full"
-                />
-              </div>
-            </div>
-
-            {/* Save Button */}
-            <div className="flex justify-center mt-4 w-full">
-              <Button onClick={handleSave} className="hover:bg-accent-hover w-full">
-                Save Changes
-              </Button>
-            </div>
+            )}
           </div>
-        </CardContent>
-      </Card>
-      </div>
+
+          {/* Last Name */}
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-muted-foreground">
+              Last Name
+            </label>
+            {isEditing.lastName ? (
+              <Input
+                name="lastName"
+                value={profile.lastName}
+                onChange={handleChange}
+                onBlur={() => handleEditToggle("lastName")}
+                autoFocus
+              />
+            ) : (
+              <div className="flex items-center gap-2">
+                <span>{profile.lastName}</span>
+                <Pencil
+                  className="w-4 h-4 cursor-pointer"
+                  onClick={() => handleEditToggle("lastName")}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Email */}
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-muted-foreground">
+              Email
+            </label>
+            {isEditing.email ? (
+              <Input
+                name="email"
+                value={profile.email}
+                onChange={handleChange}
+                onBlur={() => handleEditToggle("email")}
+                autoFocus
+              />
+            ) : (
+              <div className="flex items-center gap-2">
+                <span>{profile.email}</span>
+                <Pencil
+                  className="w-4 h-4 cursor-pointer"
+                  onClick={() => handleEditToggle("email")}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Civil ID */}
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-muted-foreground">
+              Civil ID
+            </label>
+            {isEditing.civilId ? (
+              <Input
+                name="civilId"
+                value={profile.civilId}
+                onChange={handleChange}
+                onBlur={() => handleEditToggle("civilId")}
+                autoFocus
+              />
+            ) : (
+              <div className="flex items-center gap-2">
+                <span>{profile.civilId}</span>
+                <Pencil
+                  className="w-4 h-4 cursor-pointer"
+                  onClick={() => handleEditToggle("civilId")}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Phone Number */}
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-muted-foreground">
+              Phone Number
+            </label>
+            {isEditing.phoneNumber ? (
+              <Input
+                name="phoneNumber"
+                value={profile.phoneNumber}
+                onChange={handleChange}
+                onBlur={() => handleEditToggle("phoneNumber")}
+                autoFocus
+              />
+            ) : (
+              <div className="flex items-center gap-2">
+                <span>{profile.phoneNumber}</span>
+                <Pencil
+                  className="w-4 h-4 cursor-pointer"
+                  onClick={() => handleEditToggle("phoneNumber")}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Save Button */}
+          <Button
+            onClick={handleSave}
+            variant="primary"
+            className="mt-6 w-full"
+          >
+            Save Changes
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
