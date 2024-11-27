@@ -7,7 +7,7 @@ import { deleteToken, setToken } from "./token";
 
 export async function login(formData) {
   try {
-    const response = await fetch(`${baseUrl}/mini-project/api/auth/login`, {
+    const response = await fetch(`${baseUrl}/auth/login`, {
       method: "POST",
       headers: await getHeaders(),
       body: JSON.stringify(formData),
@@ -30,13 +30,10 @@ export async function signup(data) {
   formData.append("Phone Number", data.phoneNumber);
 
   try {
-    const response = await fetch(
-      `${baseUrl}http://localhost:8080/auth/signup`,
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    const response = await fetch(`${baseUrl}/auth/signup`, {
+      method: "POST",
+      body: formData,
+    });
 
     const { token } = await response.json();
     await setToken(token);

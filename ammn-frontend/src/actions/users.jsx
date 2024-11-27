@@ -20,9 +20,28 @@ export const getAllUsers = async () => {
     throw error;
   }
 };
+
+export const getUser = async () => {
+  try {
+    const response = await fetch(`${baseUrl}/auth/signup`, {
+      method: "GET",
+      headers: await getHeaders(),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error fetching user: ${response.statusText}`);
+    }
+
+    const users = await response.json();
+    return users;
+  } catch (error) {
+    console.error("Error in getUser: ", error);
+    throw error;
+  }
+};
 export const getWallet = async () => {
   try {
-    const response = await fetch(`${baseUrl}/mini-project/api/auth/wallet`, {
+    const response = await fetch(`${baseUrl}/auth/wallet`, {
       method: "GET",
       headers: await getHeaders(),
     });
@@ -40,7 +59,7 @@ export const getWallet = async () => {
 };
 
 export const findUserByEmail = async (email) =>
-  fetch(`${baseUrl}/mini-project/api/auth/find-user`, {
+  fetch(`${baseUrl}/auth/find-user`, {
     method: "POST",
     headers: await getHeaders(),
     body: JSON.stringify({ email }),
@@ -51,14 +70,11 @@ export const findUserByEmail = async (email) =>
   );
 
 export const createGityaAccount = async (accountData) => {
-  const response = await fetch(
-    `${baseUrl}/mini-project/api/auth/create-account`,
-    {
-      method: "POST",
-      headers: await getHeaders(),
-      body: JSON.stringify(accountData),
-    }
-  );
+  const response = await fetch(`${baseUrl}/auth/create-account`, {
+    method: "POST",
+    headers: await getHeaders(),
+    body: JSON.stringify(accountData),
+  });
 
   if (!response.ok) {
     return Promise.reject(`Error creating account: ${response.statusText}`);
