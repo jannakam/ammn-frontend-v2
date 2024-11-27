@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardDescription,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export function Gatiya() {
   const gatiyas = [
@@ -26,10 +27,14 @@ export function Gatiya() {
   ];
 
   return (
+
     <Card className="h-full overflow-scroll backdrop-blur-lg bg-background/40">
-      <CardHeader className="sticky top-0 z-10 bg-background mb-5">
+      <CardHeader className="sticky top-0 z-10 bg-background mb-5 flex flex-row justify-between">
+        <div>
         <CardTitle>Gatiya</CardTitle>
         <CardDescription>One purpose, one wallet</CardDescription>
+        </div>
+          <Button variant="outline">Join by Invite</Button>
       </CardHeader>
       <CardContent className="space-y-6">
         {gatiyas.map((gatiya, index) => (

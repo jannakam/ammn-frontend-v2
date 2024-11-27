@@ -36,9 +36,9 @@ export function Friends() {
               onChange={(e) => setQuery(e.target.value)}
               className="relative z-10 active:border-primary"
             />
-            <Button variant="outline" size="sm" className="z-10">
+            {/* <Button variant="outline" size="sm" className="z-10">
               <PlusIcon />
-            </Button>
+            </Button> */}
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
