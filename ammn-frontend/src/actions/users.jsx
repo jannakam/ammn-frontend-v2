@@ -4,14 +4,11 @@ import { revalidatePath } from "next/cache";
 
 export const getAllUsers = async () => {
   try {
-    const response = await fetch(`${baseUrl}/mini-project/api/auth/users`, {
+    const headers = await getHeaders();
+    const response = await fetch(`${baseUrl}/users`, {
       method: "GET",
-      headers: await getHeaders(),
+      headers,
     });
-
-    if (!response.ok) {
-      throw new Error(`Error fetching users: ${response.statusText}`);
-    }
 
     const users = await response.json();
     return users;
@@ -22,7 +19,7 @@ export const getAllUsers = async () => {
 };
 export const getWallet = async () => {
   try {
-    const response = await fetch(`${baseUrl}/mini-project/api/auth/wallet`, {
+    const response = await fetch(`${baseUrl}/wallet`, {
       method: "GET",
       headers: await getHeaders(),
     });
