@@ -36,16 +36,6 @@ import {
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getWallet } from "@/actions/users";
-
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
 import { getAllUsers } from "@/actions/users";
 import { myTransactions } from "@/actions/transactions";
 import clsx from "clsx";
@@ -202,17 +192,11 @@ export function Wallet() {
   }
 
   return (
-    
-        <div>
-          <div className="text-4xl font-bold lg:text-4xl mb-8 sticky top-0 welcome-back m-2">
-            Welcome Back,{" "}
-            <span className="text-destructive">{wallet.user.firstName}!</span>
-          </div>
 
             <Card className="z-10 backdrop-blur-lg bg-background/40 overflow-hidden">
               <CardHeader className="bg-background mb-5">
-                <CardTitle>Wallet</CardTitle>
-                <CardDescription>Manage your personal funds</CardDescription>
+                <CardTitle className="text-4xl welcome-back">Welcome Back,{" "}
+                <span className="text-destructive">{wallet.user.firstName}!</span></CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="mx-auto p-4">
@@ -348,7 +332,6 @@ export function Wallet() {
                 </div>
               </CardContent>
             </Card>
-          </div>
   );
 }
 
