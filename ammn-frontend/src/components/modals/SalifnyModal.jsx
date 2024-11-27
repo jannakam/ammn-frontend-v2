@@ -242,9 +242,7 @@ const FriendsComponent = ({
   <div className="grid gap-4 w-full">
     <h3 className="text-lg font-medium">Select a User</h3>
     {/* Dropdown for selecting users */}
-    <Label htmlFor="user-select" className="text-sm font-medium">
-      Choose a User:
-    </Label>
+    <div className="w-10 h15"></div>
     <select
       id="user-select"
       value={selectedUserEmail || ""}
@@ -273,20 +271,68 @@ const FriendsComponent = ({
   </div>
 );
 
-const PaymentComponent = ({ totalBalance, setTotalBalance }) => (
+const PaymentComponent = ({
+  totalBalance,
+  setTotalBalance,
+  paymentMethod,
+  setPaymentMethod,
+  installmentValue,
+  setInstallmentValue,
+}) => (
   <div className="grid gap-4">
     {/* Input for entering amount */}
-    <Label htmlFor="amount-input" className="text-sm font-medium mt-4">
-      Enter Amount:
-    </Label>
-    <Input
-      id="amount-input"
-      type="number"
-      placeholder="Enter amount"
-      value={totalBalance}
-      onChange={(e) => setTotalBalance(e.target.value)}
-      className="w-full"
-    />
+    <div className="grid gap-2">
+      <Label htmlFor="total-balance" className="text-sm font-medium">
+        Add Amount
+      </Label>
+      <Input
+        id="total-balance"
+        value={totalBalance}
+        onChange={(e) => setTotalBalance(e.target.value)}
+        placeholder="Enter total balance"
+        className="w-full"
+      />
+    </div>
+
+    {/* Payment Method Selection */}
+    <div className="grid gap-2">
+      <Label className="text-sm font-medium">Choose Payment Method</Label>
+      <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
+        <div className="flex gap-4">
+          <div className="flex items-center gap-2">
+            <RadioGroupItem id="onePayment" value="onePayment" />
+            <Label htmlFor="onePayment">One Payment</Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <RadioGroupItem id="installment" value="installment" />
+            <Label htmlFor="installment">Installments</Label>
+          </div>
+        </div>
+      </RadioGroup>
+    </div>
+
+    {/* Installment Options */}
+    {paymentMethod === "installment" && (
+      <div className="grid gap-2">
+        <Label className="text-sm font-medium">Choose Installments</Label>
+        <RadioGroup
+          value={installmentValue.toString()}
+          onValueChange={(value) => setInstallmentValue(Number(value))}
+        >
+          <div className="flex gap-4">
+            {[2, 3, 4, 5].map((value) => (
+              <div key={value} className="flex items-center gap-2">
+                <RadioGroupItem
+                  id={`installment-${value}`}
+                  value={value.toString()}
+                />
+                <Label htmlFor={`installment-${value}`}>{value} months</Label>
+              </div>
+            ))}
+          </div>
+        </RadioGroup>
+      </div>
+    )}
   </div>
 );
 const DatePickerComponent = ({ dueDate, setDueDate }) => (
@@ -320,7 +366,7 @@ const DatePickerComponent = ({ dueDate, setDueDate }) => (
 );
 
 const CompleteComponent = ({
-  selected,
+  selectedUserEmail,
   totalBalance,
   paymentMethod,
   installmentValue,
@@ -335,24 +381,35 @@ const CompleteComponent = ({
     </CardHeader>
     <CardContent>
       <div className="flex flex-col gap-4">
+        {/* Friend Email */}
         <div className="flex justify-between">
           <span className="font-semibold">Friend:</span>
-          <span>{selected?.name || "Not selected"}</span>
+          <span>{selectedUserEmail || "Not selected"}</span>
         </div>
+
+        {/* Payment Method */}
         <div className="flex justify-between">
           <span className="font-semibold">Payment Method:</span>
-          <span>{paymentMethod}</span>
+          <span>
+            {paymentMethod === "onePayment" ? "One Payment" : "Installments"}
+          </span>
         </div>
+
+        {/* Installments (if applicable) */}
         {paymentMethod === "installment" && (
           <div className="flex justify-between">
             <span className="font-semibold">Installments:</span>
             <span>{installmentValue} months</span>
           </div>
         )}
+
+        {/* Loan Amount */}
         <div className="flex justify-between">
           <span className="font-semibold">Loan Amount:</span>
           <span>{totalBalance || "Not provided"}</span>
         </div>
+
+        {/* Due Date */}
         <div className="flex justify-between">
           <span className="font-semibold">Due Date:</span>
           <span>
