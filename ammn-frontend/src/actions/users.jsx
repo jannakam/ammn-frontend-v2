@@ -17,6 +17,21 @@ export const getAllUsers = async () => {
     throw error;
   }
 };
+export const getMyUser = async () => {
+  try {
+    const headers = await getHeaders();
+    const response = await fetch(`${baseUrl}/users/me`, {
+      method: "GET",
+      headers,
+    });
+    const myUser = await response.json();
+    console.log(myUser);
+    return myUser;
+  } catch (error) {
+    console.error("Error in getAllUsers:", error);
+    throw error;
+  }
+};
 export const getWallet = async () => {
   try {
     const response = await fetch(`${baseUrl}/wallet`, {
@@ -36,11 +51,11 @@ export const getWallet = async () => {
   }
 };
 
-export const findUserByEmail = async (email) =>
-  fetch(`${baseUrl}/mini-project/api/auth/find-user`, {
+export const findUserByEmail = async (data) =>
+  fetch(`${baseUrl}/`, {
     method: "POST",
     headers: await getHeaders(),
-    body: JSON.stringify({ email }),
+    body: JSON.stringify(data),
   }).then((response) =>
     response.ok
       ? response.json()
