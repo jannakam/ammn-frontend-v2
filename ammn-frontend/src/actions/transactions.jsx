@@ -123,3 +123,25 @@ export const addFundsToGityaAccount = async (formData) => {
     return false;
   }
 };
+export const joinGatiyaAccount = async (inviteCode) => {
+  const data = { inviteCode: inviteCode };
+
+  try {
+    const response = await fetch(`${baseUrl}/users/join`, {
+      method: "POST",
+      headers: await getHeaders(),
+      body: JSON.stringify(data), // Send the object as JSON
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || response.statusText);
+    }
+
+    const newGatiyaAccount = await response.json(); // Parse the response data
+    return newGatiyaAccount; // Return the Gatiya account data
+  } catch (error) {
+    console.error("Error in joinGatiyaAccount:", error);
+    throw error;
+  }
+};

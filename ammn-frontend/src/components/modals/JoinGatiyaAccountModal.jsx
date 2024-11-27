@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { joinGatiyaAccount } from "@/actions/users";
+import { joinGatiyaAccount } from "@/actions/transactions";
 
 export function JoinGatiyaModal({ isOpen, onClose, onJoinSuccess }) {
   const { toast } = useToast();
@@ -34,7 +34,8 @@ export function JoinGatiyaModal({ isOpen, onClose, onJoinSuccess }) {
       console.error("Error joining Gatiya account:", error);
       toast({
         description:
-          error.message || "An error occurred while joining the Gatiya account.",
+          error.message ||
+          "An error occurred while joining the Gatiya account.",
       });
     } finally {
       setIsSubmitting(false);
@@ -63,11 +64,7 @@ export function JoinGatiyaModal({ isOpen, onClose, onJoinSuccess }) {
           </div>
         </div>
         <DialogFooter>
-          <Button
-            variant="secondary"
-            onClick={onClose}
-            disabled={isSubmitting}
-          >
+          <Button variant="secondary" onClick={onClose} disabled={isSubmitting}>
             Cancel
           </Button>
           <Button
