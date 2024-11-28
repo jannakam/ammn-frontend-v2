@@ -34,6 +34,7 @@ import {
   SelectValue,
   SelectItem,
 } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 
 // Importing required functions
 import { getAllUsers } from "@/actions/users";
@@ -55,16 +56,17 @@ const { useStepper, steps } = defineStepper(
     id: "Date",
     title: "Maturity Date",
     description: "Enter a due date for loan",
-  },
-  {
-    id: "complete",
-    title: "Complete",
-    description: "Loan request complete",
   }
+  // {
+  //   id: "complete",
+  //   title: "Complete",
+  //   description: "Loan request complete",
+  // }
 );
 
 export default function Page() {
   const stepper = useStepper();
+  const { toast } = useToast();
 
   // State for managing users, form data, and UI state
   const [users, setUsers] = React.useState([]);
@@ -74,6 +76,8 @@ export default function Page() {
   const [installmentValue, setInstallmentValue] = React.useState(2);
   const [dueDate, setDueDate] = React.useState(null);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [showSummary, setShowSummary] = React.useState(false);
+
 
   // Fetch all users on component mount
   React.useEffect(() => {
@@ -94,30 +98,38 @@ export default function Page() {
 
   // Handle form submission
   const handleSubmit = async () => {
-    if (!selectedUserEmail || !totalBalance) {
-      alert("Please select a user and enter an amount.");
-      return;
-    }
-
     setIsSubmitting(true);
     try {
       const formData = new FormData();
       formData.append("email", selectedUserEmail);
       formData.append("amount", totalBalance);
-
+  
       const success = await salifny(formData);
-
+  
       if (success) {
-        alert("Transaction completed successfully!");
+        toast({
+          title: "Success",
+          description: "Transaction completed successfully!",
+          variant: "default",
+        });
         stepper.reset();
         setSelectedUserEmail("");
         setTotalBalance("");
         setDueDate(null);
       } else {
-        alert("Transaction failed. Please try again.");
+        toast({
+          title: "Transaction Failed",
+          description: "Transaction failed. Please try again.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Error completing transaction:", error);
+      toast({
+        title: "Error",
+        description: "An error occurred while completing the transaction.",
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -126,92 +138,93 @@ export default function Page() {
   return (
     <div className="min-h-[38rem] max-h-[38rem] w-full overflow-scroll p-6">
       <h2 className="text-2xl font-bold mb-4">Salifny</h2>
-      <div className="space-y-6 p-6 border rounded-lg w-auto">
-        <div className="flex justify-between">
-          <h2 className="text-lg font-medium">Checkout</h2>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">
-              Step {stepper.current.index + 1} of {steps.length}
-            </span>
+      {!showSummary ? (
+        <div className="space-y-6 p-6 border rounded-lg w-auto">
+          <div className="flex justify-between">
+            <h2 className="text-lg font-medium">Checkout</h2>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">
+                Step {stepper.current.index + 1} of {steps.length}
+              </span>
+            </div>
           </div>
-        </div>
-        <nav aria-label="Checkout Steps" className="group my-4">
-          <ol className="flex flex-col gap-2" aria-orientation="vertical">
-            {stepper.all.map((step, index, array) => (
-              <React.Fragment key={step.id}>
-                <li className="flex items-center gap-4 flex-shrink-0">
-                  <Button
-                    type="button"
-                    role="tab"
-                    variant={
-                      index <= stepper.current.index ? "default" : "secondary"
-                    }
-                    aria-current={
-                      stepper.current.id === step.id ? "step" : undefined
-                    }
-                    className="flex size-10 items-center justify-center rounded-full"
-                    onClick={() => stepper.goTo(step.id)}
-                  >
-                    {index + 1}
-                  </Button>
-                  <span className="text-sm font-medium">{step.title}</span>
-                </li>
-                <div className="flex gap-4">
-                  {index < array.length - 1 && (
-                    <Separator
-                      orientation="vertical"
-                      className={`w-[1px] h-full ${
-                        index < stepper.current.index
-                          ? "bg-primary"
-                          : "bg-muted"
-                      }`}
-                    />
-                  )}
-                  <div className="flex-1 my-4">
-                    {stepper.current.id === step.id &&
-                      stepper.switch({
-                        Friends: () => (
-                          <FriendsComponent
-                            users={users}
-                            selectedUserEmail={selectedUserEmail}
-                            setSelectedUserEmail={setSelectedUserEmail}
-                            stepper={stepper}
-                          />
-                        ),
-                        payment: () => (
-                          <PaymentComponent
-                            totalBalance={totalBalance}
-                            setTotalBalance={setTotalBalance}
-                            paymentMethod={paymentMethod}
-                            setPaymentMethod={setPaymentMethod}
-                            installmentValue={installmentValue}
-                            setInstallmentValue={setInstallmentValue}
-                          />
-                        ),
-                        Date: () => (
-                          <DatePickerComponent
-                            dueDate={dueDate}
-                            setDueDate={setDueDate}
-                          />
-                        ),
-                        complete: () => (
-                          <CompleteComponent
-                            selectedUserEmail={selectedUserEmail}
-                            totalBalance={totalBalance}
-                            paymentMethod={paymentMethod}
-                            installmentValue={installmentValue}
-                            dueDate={dueDate}
-                          />
-                        ),
-                      })}
+          <nav aria-label="Checkout Steps" className="group my-4">
+            <ol className="flex flex-col gap-2" aria-orientation="vertical">
+              {stepper.all.map((step, index, array) => (
+                <React.Fragment key={step.id}>
+                  <li className="flex items-center gap-4 flex-shrink-0">
+                    <Button
+                      type="button"
+                      role="tab"
+                      variant={
+                        index <= stepper.current.index ? "default" : "secondary"
+                      }
+                      aria-current={
+                        stepper.current.id === step.id ? "step" : undefined
+                      }
+                      className="flex size-10 items-center justify-center rounded-full"
+                      onClick={() => stepper.goTo(step.id)}
+                    >
+                      {index + 1}
+                    </Button>
+                    <span className="text-sm font-medium">{step.title}</span>
+                  </li>
+                  <div className="flex gap-4">
+                    {index < array.length - 1 && (
+                      <Separator
+                        orientation="vertical"
+                        className={`w-[1px] h-full ${
+                          index < stepper.current.index
+                            ? "bg-primary"
+                            : "bg-muted"
+                        }`}
+                      />
+                    )}
+                    <div className="flex-1 my-4">
+                      {stepper.current.id === step.id &&
+                        stepper.switch({
+                          Friends: () => (
+                            <FriendsComponent
+                              users={users}
+                              selectedUserEmail={selectedUserEmail}
+                              setSelectedUserEmail={setSelectedUserEmail}
+                              stepper={stepper}
+                            />
+                          ),
+                          payment: () => (
+                            <PaymentComponent
+                              totalBalance={totalBalance}
+                              setTotalBalance={setTotalBalance}
+                              paymentMethod={paymentMethod}
+                              setPaymentMethod={setPaymentMethod}
+                              installmentValue={installmentValue}
+                              setInstallmentValue={setInstallmentValue}
+                            />
+                          ),
+                          Date: () => (
+                            <DatePickerComponent
+                              dueDate={dueDate}
+                              setDueDate={setDueDate}
+                            />
+                          ),
+                          // complete: () => (
+                          //   <CompleteComponent
+                          //     selectedUserEmail={selectedUserEmail}
+                          //     totalBalance={totalBalance}
+                          //     paymentMethod={paymentMethod}
+                          //     installmentValue={installmentValue}
+                          //     dueDate={dueDate}
+                          //   />
+                          // ),
+                        })}
+                    </div>
                   </div>
-                </div>
-              </React.Fragment>
-            ))}
-          </ol>
-        </nav>
-        <div className="space-y-4">
-          {!stepper.isLast ? (
+                </React.Fragment>
+              ))}
+            </ol>
+          </nav>
+          <div className="space-y-4">
+            {/* {!stepper.isLast ? ( */}
             <div className="flex justify-end gap-4">
               <Button
                 variant="secondary"
@@ -220,15 +233,39 @@ export default function Page() {
               >
                 Back
               </Button>
-              <Button onClick={stepper.next}>Next</Button>
+              <Button
+                onClick={() => {
+                  setShowSummary(true);
+                  stepper.next();
+                }}
+              >
+                Next
+              </Button>
             </div>
-          ) : (
+            {/* ) : (
+              // <Button onClick={handleSubmit} disabled={isSubmitting}>
+              //   {isSubmitting ? "Processing..." : "Complete Transaction"}
+              // </Button>
+              <h3>Completed</h3>
+            )} */}
+          </div>
+        </div>
+      ) : (
+        <>
+          <CompleteComponent
+            selectedUserEmail={selectedUserEmail}
+            totalBalance={totalBalance}
+            paymentMethod={paymentMethod}
+            installmentValue={installmentValue}
+            dueDate={dueDate}
+          />
+          <div style={{ marginTop: "20px" }}>
             <Button onClick={handleSubmit} disabled={isSubmitting}>
               {isSubmitting ? "Processing..." : "Complete Transaction"}
             </Button>
-          )}
-        </div>
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -240,7 +277,7 @@ const FriendsComponent = ({
   stepper,
 }) => (
   <div className="grid gap-4 w-full">
-    {/* <h3 className="text-lg font-medium">Select a User</h3> */}
+    <h3 className="text-lg font-medium">Select a User</h3>
     <Select onValueChange={setSelectedUserEmail}>
       <SelectTrigger>
         <SelectValue placeholder="Select a user..." />

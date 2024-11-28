@@ -15,7 +15,7 @@ export const myTransactions = async () => {
 export const depositMoney = async (amount) => {
   try {
     const response = await fetch(`${baseUrl}/wallet/transactions/deposit`, {
-      method: "PUT",
+      method: "POST",
       headers: await getHeaders(),
       body: JSON.stringify(amount),
     });
@@ -32,7 +32,7 @@ export const depositMoney = async (amount) => {
 export const withdrawMoney = async (amount) => {
   try {
     const response = await fetch(`${baseUrl}/wallet/transactions/withdraw`, {
-      method: "PUT",
+      method: "POST",
       headers: await getHeaders(),
       body: JSON.stringify(amount),
     });

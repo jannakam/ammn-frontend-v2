@@ -41,22 +41,8 @@ export function Friends() {
       user.email.toLowerCase().includes(query.toLowerCase())
   );
 
-  const friendszzzz = [
-    { name: "Wahab", username: "@wahab", fallback: "JD", badge: "silver" },
-    { name: "Nora", username: "@nora", fallback: "JS", badge: "bronze" },
-    { name: "Saja", username: "@saja", fallback: "MB", badge: "gold" },
-    { name: "Janna", username: "@janna", fallback: "SA", badge: "silver" },
-  ];
-
-  // Filter friends based on the search query
-  // const filteredFriends = friends.filter(
-  //   (friend) =>
-  //     friend.name.toLowerCase().includes(query.toLowerCase()) ||
-  //     friend.username.toLowerCase().includes(query.toLowerCase())
-  // );
-
   return (
-    <Card className="h-full overflow-scroll z-10 backdrop-blur-lg bg-background/70">
+    <Card className="h-full w-full overflow-y-auto overflow-x-hidden z-10 backdrop-blur-lg bg-background/70">
       <CardHeader className="sticky top-0 z-10 bg-background mb-5">
         <CardTitle>Friends</CardTitle>
         <CardDescription>Find and add friends</CardDescription>
@@ -70,26 +56,31 @@ export function Friends() {
           />
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 overflow-x-hidden">
         {filteredFriends.length > 0 ? (
           filteredFriends.map((friend, index) => (
-            <div key={index} className="flex items-center gap-4">
+            <div key={index} className="flex flex-row items-start gap-4">
               <Avatar>
                 <AvatarImage
                   src="/placeholder-user.jpg"
                   alt={friend.firstName + " " + friend.lastName}
                 />
-                <AvatarFallback>{friend.fallback}</AvatarFallback>
+                <AvatarFallback>
+                  {friend.firstName.charAt(0)}
+                  {friend.lastName.charAt(0)}
+                </AvatarFallback>
               </Avatar>
-              <div className="flex flex-col flex-grow">
-                <div className="text-sm text-muted-foreground">
+              <div className="flex flex-col flex-grow break-all">
+                <div className="text-md text-muted-foreground">
                   {friend.firstName + " " + friend.lastName}
                 </div>
                 <div className="text-sm text-muted-foreground">
                   {friend.email}
                 </div>
               </div>
-              {/* <Badge variant="outline">{friend.badge}</Badge> */}
+              {/* Uncomment if you want to use the badge
+              <Badge variant="outline">{friend.badge}</Badge>
+              */}
             </div>
           ))
         ) : (

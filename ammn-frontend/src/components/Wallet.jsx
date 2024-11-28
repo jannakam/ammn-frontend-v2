@@ -39,6 +39,7 @@ import { getWallet } from "@/actions/users";
 import { getAllUsers } from "@/actions/users";
 import { myTransactions } from "@/actions/transactions";
 import { TransferDialog } from "@/components/modals/TransferDialog";
+import { WalletActionsModal } from "@/components/modals/WalletActionsModal";
 import clsx from "clsx";
 
 export function Wallet() {
@@ -100,22 +101,37 @@ export function Wallet() {
 
   useEffect(() => {
     const fetchWallet = async () => {
-      setIsLoading(true);
-      try {
-        const fetchedWallet = await getWallet();
-        setWallet(fetchedWallet);
-      } catch (error) {
-        console.error("Error fetching wallet:", error);
-        toast({
-          description: "Failed to load wallet data.",
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    setIsLoading(true);
+    try {
+      const fetchedWallet = await getWallet();
+      setWallet(fetchedWallet);
+    } catch (error) {
+      console.error("Error fetching wallet:", error);
+      toast({
+        description: "Failed to load wallet data.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
     fetchWallet();
   }, [toast]);
+
+  const fetchWallet = async () => {
+    setIsLoading(true);
+    try {
+      const fetchedWallet = await getWallet();
+      setWallet(fetchedWallet);
+    } catch (error) {
+      console.error("Error fetching wallet:", error);
+      toast({
+        description: "Failed to load wallet data.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
 
   const fetchWalletTransactions = async () => {
@@ -136,6 +152,7 @@ export function Wallet() {
     }
     setShowWalletTransactions(!showWalletTransactions);
     setShowTransactions(false); // Ensure CardTransactions is hidden
+    setSelectedAccount(false)
   };
   
   const toggleTransactions = (account) => {
@@ -216,7 +233,13 @@ export function Wallet() {
                       />
                     </div>
                     <div className="flex flex-row justify-between items-end">
+                      <div className="flex flex-row gap-2">
                       <TransferDialog bankAccounts={bankAccounts} />
+                      <WalletActionsModal
+                        bankAccounts={bankAccounts}
+                        onTransactionSuccess={fetchWallet}
+                      />
+                      </div>
 
                       <div className="flex flex-col gap-2">
                       <Button

@@ -3,31 +3,15 @@
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
-import {
-  createGityaAccount,
-  getWallet,
-  getAllUsers, // Import the getAllUsers function
-} from "@/actions/users";
-import { takeFundsfromGityaAccount } from "@/actions/transactions";
-import { DepositWithdrawModal } from "@/components/modals/DepositWithdrawModal";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
+import { getAllUsers } from "@/actions/users";
+import { useEffect, useState } from "react";
 
-export default function FriendPicklist({ onGatiyaCreated }) {
+export default function FriendPicklist() {
   const [availableFriends, setAvailableFriends] = React.useState([]);
   const [selectedFriends, setSelectedFriends] = React.useState([]);
   const [selectedFriend, setSelectedFriend] = React.useState(null);
@@ -35,26 +19,29 @@ export default function FriendPicklist({ onGatiyaCreated }) {
   const [totalBalance, setTotalBalance] = React.useState("");
   const [deductedAmount, setDeductedAmount] = React.useState(null);
   const [showSummary, setShowSummary] = React.useState(false);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [isModalOpen, setIsModalOpen] = React.useState(false); // Modal state
-  const [selectedGatiya, setSelectedGatiya] = React.useState(null); // Selected Gatiya for modal
-  const [isLoading, setIsLoading] = React.useState(true); // Loading state
-  const [error, setError] = React.useState(null); // Error state
+  const [isLoading, setIsLoading] = React.useState(false); // For loading state
+  const { toast } = useToast();
 
-  // Fetch all users when the component mounts
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchUsers = async () => {
+      setIsLoading(true); // Start loading
       try {
-        const users = await getAllUsers();
-        // Exclude the current user from the list if needed
-        // Assuming you have access to the current user's ID
-        // const filteredUsers = users.filter((user) => user.id !== currentUserId);
-        setAvailableFriends(users);
-        setIsLoading(false);
-      } catch (err) {
-        console.error("Error fetching users:", err);
-        setError("Failed to load users.");
-        setIsLoading(false);
+        const fetchedUsers = await getAllUsers();
+        // Replace avatar with hardcoded image path
+        const formattedUsers = fetchedUsers.map((user) => ({
+          ...user,
+          avatar: '/avatar.png',
+        }));
+        setAvailableFriends(formattedUsers); // Set fetched users to state
+      }  catch (error) {
+        console.error("Error fetching users:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load users.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false); // Stop loading
       }
     };
 
@@ -86,87 +73,39 @@ export default function FriendPicklist({ onGatiyaCreated }) {
     }
   }, [totalBalance, selectedFriends]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!groupName || !totalBalance || selectedFriends.length === 0) {
-      alert("Please provide all required details!");
+      toast({
+        title: "Error",
+        description: "Please provide all required details!",
+        variant: "destructive",
+      });
       return;
     }
+
+    const newGatiya = {
+      name: groupName,
+      initial: parseFloat(totalBalance),
+      remaining: parseFloat(totalBalance),
+      people: selectedFriends.map(() => '/avatar.png'),
+      created: "You",
+    };
+
+    // Save to localStorage
+    const existingGatiyas = JSON.parse(localStorage.getItem("gatiyas")) || [];
+    const updatedGatiyas = [...existingGatiyas, newGatiya];
+    localStorage.setItem("gatiyas", JSON.stringify(updatedGatiyas));
+
+    // Trigger a custom event to notify the Gatiya component
+    window.dispatchEvent(new Event("gatiya-updated"));
+
     setShowSummary(true);
+
+    toast({
+      title: "Gatiya Created!",
+      description: `Your group "${groupName}" has been created.`,
+    });
   };
-
-  const handleConfirm = async () => {
-    setIsSubmitting(true);
-    try {
-      // Prepare data for creating Gatiya account
-      const accountData = {
-        accountName: groupName,
-        jointAccountBalance: parseFloat(totalBalance),
-        remainingBalance: parseFloat(totalBalance),
-        users: selectedFriends.map((friend) => ({ id: friend.id })),
-      };
-
-      // Create Gatiya account
-      const newGatiyaAccount = await createGityaAccount(accountData);
-
-      // Deduct funds from each user's wallet
-      const deductionPromises = selectedFriends.map((friend) => {
-        const data = {
-          userId: friend.id,
-          amount: deductedAmount,
-          gatiyaAccountId: newGatiyaAccount.id,
-        };
-        return takeFundsfromGityaAccount(data);
-      });
-
-      await Promise.all(deductionPromises);
-
-      // Refresh wallet data if needed
-      await getWallet();
-
-      // Notify parent component to update Gatiya list
-      if (onGatiyaCreated) {
-        onGatiyaCreated(newGatiyaAccount);
-      }
-
-      // Reset the form
-      setGroupName("");
-      setTotalBalance("");
-      setSelectedFriends([]);
-      setShowSummary(false);
-      setIsSubmitting(false);
-      alert("Gatiya account created successfully!");
-    } catch (error) {
-      console.error("Error creating Gatiya account:", error);
-      alert("Failed to create Gatiya account.");
-      setIsSubmitting(false);
-    }
-  };
-
-  const openDepositWithdrawModal = (gatiya) => {
-    setSelectedGatiya(gatiya);
-    setIsModalOpen(true);
-  };
-
-  const handleTransactionSuccess = (updatedGatiya) => {
-    // Handle transaction success if needed
-    setIsModalOpen(false);
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-[38rem] w-full flex items-center justify-center">
-        <p>Loading users...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-[38rem] w-full flex items-center justify-center">
-        <p className="text-red-500">{error}</p>
-      </div>
-    );
-  }
 
   if (showSummary) {
     return (
@@ -184,9 +123,7 @@ export default function FriendPicklist({ onGatiyaCreated }) {
                 <span>{totalBalance}</span>
               </div>
               <div className="flex justify-between">
-                <span className="font-semibold">
-                  Contributed Amount Per Friend:
-                </span>
+                <span className="font-semibold">Contributed Amount Per Friend:</span>
                 <span>{deductedAmount?.toFixed(2)}</span>
               </div>
               <div>
@@ -197,17 +134,13 @@ export default function FriendPicklist({ onGatiyaCreated }) {
                       <Card key={friend.id} className="p-4">
                         <div className="flex items-center space-x-4">
                           <img
-                            src={friend.avatar || "/default-avatar.png"}
-                            alt={friend.firstName + " " + friend.lastName}
+                            src="/avatar.png"
+                            alt={friend.name}
                             className="w-12 h-12 rounded-full"
                           />
                           <div>
-                            <p className="font-semibold">
-                              {friend.firstName} {friend.lastName}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              {friend.email}
-                            </p>
+                            <p className="font-semibold">{friend.name}</p>
+                            <p className="text-sm text-muted-foreground">{friend.email}</p>
                           </div>
                         </div>
                       </Card>
@@ -219,12 +152,8 @@ export default function FriendPicklist({ onGatiyaCreated }) {
                 <Button variant="outline" onClick={() => setShowSummary(false)}>
                   Back
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={handleConfirm}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Creating..." : "Confirm"}
+                <Button onClick={handleSubmit} variant="outline">
+                  Confirm
                 </Button>
               </div>
             </div>
@@ -237,69 +166,66 @@ export default function FriendPicklist({ onGatiyaCreated }) {
   return (
     <div className="min-h-[38rem] max-h-[38rem] w-full overflow-scroll p-6">
       <h2 className="text-2xl font-bold mb-4">Gatiya</h2>
-      <div className="flex flex-row gap-8 justify-center items-center mb-8">
-        <Card className="w-[20rem] h-[22rem] overflow-scroll">
-          <CardHeader className="sticky top-0 z-10 bg-background">
-            <CardTitle>Available Friends</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ScrollArea className="h-[25rem] pr-4">
-              {availableFriends.map((friend) => (
-                <FriendCard
-                  key={friend.id}
-                  friend={friend}
-                  onClick={() => setSelectedFriend(friend)}
-                  isSelected={selectedFriend?.id === friend.id}
-                />
-              ))}
-            </ScrollArea>
-          </CardContent>
-        </Card>
+      {isLoading ? (
+        <p>Loading users...</p>
+      ) : (
+        <div className="flex flex-row gap-8 justify-center items-center mb-8">
+          <Card className="w-[20rem] h-[22rem] overflow-scroll">
+            <CardHeader className="sticky top-0 z-10 bg-background">
+              <CardTitle>Available Friends</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[25rem] pr-4">
+                {availableFriends.map((friend) => (
+                  <FriendCard
+                    key={friend.id}
+                    friend={friend}
+                    onClick={() => setSelectedFriend(friend)}
+                    isSelected={selectedFriend?.id === friend.id}
+                  />
+                ))}
+              </ScrollArea>
+            </CardContent>
+          </Card>
 
-        <div className="flex flex-col justify-center space-y-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => selectedFriend && moveToSelected(selectedFriend)}
-            disabled={
-              !selectedFriend ||
-              selectedFriends.some((f) => f.id === selectedFriend.id)
-            }
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => selectedFriend && moveToAvailable(selectedFriend)}
-            disabled={
-              !selectedFriend ||
-              availableFriends.some((f) => f.id === selectedFriend.id)
-            }
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
+          <div className="flex flex-col justify-center space-y-2">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => selectedFriend && moveToSelected(selectedFriend)}
+              disabled={!selectedFriend || selectedFriends.some((f) => f.id === selectedFriend.id)}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => selectedFriend && moveToAvailable(selectedFriend)}
+              disabled={!selectedFriend || availableFriends.some((f) => f.id === selectedFriend.id)}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+          </div>
+
+          <Card className="w-[20rem] h-[22rem] overflow-scroll">
+            <CardHeader className="sticky top-0 z-10 bg-background">
+              <CardTitle>Selected Friends</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[25rem] pr-4">
+                {selectedFriends.map((friend) => (
+                  <FriendCard
+                    key={friend.id}
+                    friend={friend}
+                    onClick={() => setSelectedFriend(friend)}
+                    isSelected={selectedFriend?.id === friend.id}
+                  />
+                ))}
+              </ScrollArea>
+            </CardContent>
+          </Card>
         </div>
-
-        <Card className="w-[20rem] h-[22rem] overflow-scroll">
-          <CardHeader className="sticky top-0 z-10 bg-background">
-            <CardTitle>Selected Friends</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ScrollArea className="h-[25rem] pr-4">
-              {selectedFriends.map((friend) => (
-                <FriendCard
-                  key={friend.id}
-                  friend={friend}
-                  onClick={() => setSelectedFriend(friend)}
-                  isSelected={selectedFriend?.id === friend.id}
-                />
-              ))}
-            </ScrollArea>
-          </CardContent>
-        </Card>
-      </div>
-
+      )}
       <div className="flex flex-row gap-4 items-end justify-center mb-6">
         <div className="flex-1">
           <Label>Gatiya Name</Label>
@@ -321,30 +247,17 @@ export default function FriendPicklist({ onGatiyaCreated }) {
             className="w-full"
           />
         </div>
-        <Button onClick={handleSubmit} className="h-10 w-[10rem]">
+        <Button onClick={() => setShowSummary(true)} className="h-10 w-[10rem]">
           Create
         </Button>
       </div>
-
       {selectedFriends.length > 0 && totalBalance && (
         <div className="text-center">
           <p>
             The contributed amount for each will be:{" "}
-            <strong className="text-destructive">
-              {deductedAmount?.toFixed(2)}
-            </strong>
+            <strong className="text-destructive">{deductedAmount?.toFixed(2)}</strong>
           </p>
         </div>
-      )}
-
-      {/* Deposit/Withdraw Modal */}
-      {selectedGatiya && (
-        <DepositWithdrawModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          gatiya={selectedGatiya}
-          onTransactionSuccess={handleTransactionSuccess}
-        />
       )}
     </div>
   );
@@ -360,14 +273,12 @@ function FriendCard({ friend, onClick, isSelected }) {
     >
       <CardContent className="flex items-center p-4">
         <img
-          src={friend.avatar || "/default-avatar.png"}
-          alt={`${friend.firstName} ${friend.lastName}`}
+          src="/avatar.png"
+          alt={friend.name}
           className="w-10 h-10 rounded-full mr-4"
         />
         <div>
-          <h3 className="font-semibold">
-            {friend.firstName} {friend.lastName}
-          </h3>
+          <h3 className="font-semibold">{friend.name}</h3>
           <p className="text-sm text-muted-foreground">{friend.email}</p>
         </div>
       </CardContent>

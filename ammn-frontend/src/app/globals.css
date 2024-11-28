@@ -379,7 +379,7 @@ body {
   background: linear-gradient(
     -45deg,
     hsl(var(--background)),
-    hsl(var(--secondary)),
+    hsl(var(--background)),
     hsl(var(--secondary)),
     hsl(var(--accent))
   );
@@ -395,4 +395,8 @@ body {
 
 .slides {
   font-family: Noto Kufi Arabic, sans-serif;
+}
+
+nextjs-portal {
+  display: none;
 }
