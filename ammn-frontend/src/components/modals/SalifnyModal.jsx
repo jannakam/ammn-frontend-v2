@@ -25,31 +25,41 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectGroup,
+  SelectLabel,
+  SelectValue,
+  SelectItem,
+} from "@/components/ui/select";
 
 // Importing required functions
 import { getAllUsers } from "@/actions/users";
 import { salifny } from "@/actions/transactions";
 
+// Stepper setup
 const { useStepper, steps } = defineStepper(
   {
     id: "Friends",
     title: "Select a Friend",
-    description: "Choose a Friend From the List",
+    description: "Choose a friend from the list",
   },
   {
     id: "payment",
     title: "Choose Amount",
-    description: "Enter Loan Amount and Payment method",
+    description: "Enter loan amount and payment method",
   },
   {
     id: "Date",
     title: "Maturity Date",
-    description: "Enter a Due Date for Loan",
+    description: "Enter a due date for loan",
   },
   {
     id: "complete",
     title: "Complete",
-    description: "Loan Request complete",
+    description: "Loan request complete",
   }
 );
 
@@ -69,10 +79,10 @@ export default function Page() {
   React.useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const fetchedUsers = await getAllUsers(); // Fetch all users
+        const fetchedUsers = await getAllUsers();
         const sortedUsers = fetchedUsers.sort((a, b) =>
           a.firstName.localeCompare(b.firstName)
-        ); // Sort users alphabetically by first name
+        );
         setUsers(sortedUsers);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -92,17 +102,17 @@ export default function Page() {
     setIsSubmitting(true);
     try {
       const formData = new FormData();
-      formData.append("email", selectedUserEmail); // Add email to FormData
-      formData.append("amount", totalBalance); // Add amount to FormData
+      formData.append("email", selectedUserEmail);
+      formData.append("amount", totalBalance);
 
-      const success = await salifny(formData); // Call salifny function with FormData
+      const success = await salifny(formData);
 
       if (success) {
         alert("Transaction completed successfully!");
-        stepper.reset(); // Reset the stepper after success
-        setSelectedUserEmail(""); // Reset selected user
-        setTotalBalance(""); // Reset amount
-        setDueDate(null); // Reset due date
+        stepper.reset();
+        setSelectedUserEmail("");
+        setTotalBalance("");
+        setDueDate(null);
       } else {
         alert("Transaction failed. Please try again.");
       }
@@ -139,9 +149,6 @@ export default function Page() {
                     aria-current={
                       stepper.current.id === step.id ? "step" : undefined
                     }
-                    aria-posinset={index + 1}
-                    aria-setsize={steps.length}
-                    aria-selected={stepper.current.id === step.id}
                     className="flex size-10 items-center justify-center rounded-full"
                     onClick={() => stepper.goTo(step.id)}
                   >
@@ -151,19 +158,14 @@ export default function Page() {
                 </li>
                 <div className="flex gap-4">
                   {index < array.length - 1 && (
-                    <div
-                      className="flex justify-center"
-                      style={{ paddingInlineStart: "1.25rem" }}
-                    >
-                      <Separator
-                        orientation="vertical"
-                        className={`w-[1px] h-full ${
-                          index < stepper.current.index
-                            ? "bg-primary"
-                            : "bg-muted"
-                        }`}
-                      />
-                    </div>
+                    <Separator
+                      orientation="vertical"
+                      className={`w-[1px] h-full ${
+                        index < stepper.current.index
+                          ? "bg-primary"
+                          : "bg-muted"
+                      }`}
+                    />
                   )}
                   <div className="flex-1 my-4">
                     {stepper.current.id === step.id &&
@@ -218,9 +220,7 @@ export default function Page() {
               >
                 Back
               </Button>
-              <Button onClick={stepper.next}>
-                {stepper.isLast ? "Complete" : "Next"}
-              </Button>
+              <Button onClick={stepper.next}>Next</Button>
             </div>
           ) : (
             <Button onClick={handleSubmit} disabled={isSubmitting}>
@@ -241,35 +241,32 @@ const FriendsComponent = ({
 }) => (
   <div className="grid gap-4 w-full">
     <h3 className="text-lg font-medium">Select a User</h3>
-    {/* Dropdown for selecting users */}
-    <div className="w-10 h15"></div>
-    <select
-      id="user-select"
-      value={selectedUserEmail || ""}
-      onChange={(e) => setSelectedUserEmail(e.target.value)}
-      className="p-2 border rounded-md w-full"
+    <Select onValueChange={setSelectedUserEmail}>
+      <SelectTrigger>
+        <SelectValue placeholder="Select a user..." />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectLabel>Friends</SelectLabel>
+          {users.map((user) => (
+            <SelectItem key={user.id} value={user.email}>
+              {`${user.firstName} ${user.lastName}`}
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+    <Button
+      onClick={() => selectedUserEmail && stepper.next()}
+      disabled={!selectedUserEmail}
+      className="w-1/4 justify-self-end"
     >
-      <option value="" disabled>
-        Select a user...
-      </option>
-      {users.map((user) => (
-        <option key={user.id} value={user.email}>
-          {`${user.firstName} ${user.lastName}`}
-        </option>
-      ))}
-    </select>
-
-    {/* Next button */}
-    <div className="flex justify-end mt-4">
-      <Button
-        onClick={() => selectedUserEmail && stepper.next()}
-        disabled={!selectedUserEmail}
-      >
-        Next
-      </Button>
-    </div>
+      Next
+    </Button>
   </div>
 );
+
+
 
 const PaymentComponent = ({
   totalBalance,
