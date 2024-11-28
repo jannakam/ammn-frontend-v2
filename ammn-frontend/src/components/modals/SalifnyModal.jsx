@@ -240,7 +240,7 @@ const FriendsComponent = ({
   stepper,
 }) => (
   <div className="grid gap-4 w-full">
-    <h3 className="text-lg font-medium">Select a User</h3>
+    {/* <h3 className="text-lg font-medium">Select a User</h3> */}
     <Select onValueChange={setSelectedUserEmail}>
       <SelectTrigger>
         <SelectValue placeholder="Select a user..." />
@@ -265,8 +265,6 @@ const FriendsComponent = ({
     </Button>
   </div>
 );
-
-
 
 const PaymentComponent = ({
   totalBalance,
