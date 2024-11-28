@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { Pencil } from "lucide-react";
 import { getMyUser } from "@/actions/users";
+
 export default function ProfilePage() {
   const [profile, setProfile] = useState({
     firstName: "",
@@ -22,12 +24,11 @@ export default function ProfilePage() {
 
   const [isLoading, setIsLoading] = useState(false); // Loading state
 
-  // Fetch user data using getMyUser
   useEffect(() => {
     const fetchUser = async () => {
       setIsLoading(true);
       try {
-        const userData = await getMyUser(); // Assume getMyUser is passed as a prop
+        const userData = await getMyUser();
         setProfile({
           firstName: userData.firstName,
           lastName: userData.lastName,
@@ -43,7 +44,7 @@ export default function ProfilePage() {
     };
 
     fetchUser();
-  }, [getMyUser]);
+  }, []);
 
   const handleEditToggle = (field) => {
     setIsEditing((prev) => ({
@@ -66,138 +67,121 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen p-6">
-      <h2 className="text-2xl font-bold mb-4">Profile</h2>
+    <div className=" p-6 bg-background">
+      <h2 className="text-2xl font-bold mb-6">Profile</h2>
       {isLoading ? (
         <div>Loading...</div>
       ) : (
-        <div className="space-y-6">
-          {/* First Name */}
-          <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-muted-foreground">
-              First Name
-            </label>
-            {isEditing.firstName ? (
-              <Input
-                name="firstName"
-                value={profile.firstName}
-                onChange={handleChange}
-                onBlur={() => handleEditToggle("firstName")}
-                autoFocus
-              />
-            ) : (
-              <div className="flex items-center gap-2">
-                <span>{profile.firstName}</span>
+        <div className="grid gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* First Name */}
+            <div>
+              <Label htmlFor="firstName" className="text-sm font-medium">
+                First Name
+              </Label>
+              <div className="relative flex items-center gap-2">
+                <Input
+                  id="firstName"
+                  name="firstName"
+                  value={profile.firstName}
+                  onChange={handleChange}
+                  readOnly={!isEditing.firstName}
+                  className={isEditing.firstName ? "border-accent" : "bg-background"}
+                />
                 <Pencil
-                  className="w-4 h-4 cursor-pointer"
+                  className="w-5 h-5 text-accent cursor-pointer"
                   onClick={() => handleEditToggle("firstName")}
                 />
               </div>
-            )}
-          </div>
+            </div>
 
-          {/* Last Name */}
-          <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-muted-foreground">
-              Last Name
-            </label>
-            {isEditing.lastName ? (
-              <Input
-                name="lastName"
-                value={profile.lastName}
-                onChange={handleChange}
-                onBlur={() => handleEditToggle("lastName")}
-                autoFocus
-              />
-            ) : (
-              <div className="flex items-center gap-2">
-                <span>{profile.lastName}</span>
+            {/* Last Name */}
+            <div>
+              <Label htmlFor="lastName" className="text-sm font-medium">
+                Last Name
+              </Label>
+              <div className="relative flex items-center gap-2">
+                <Input
+                  id="lastName"
+                  name="lastName"
+                  value={profile.lastName}
+                  onChange={handleChange}
+                  readOnly={!isEditing.lastName}
+                  className={isEditing.lastName ? "border-accent" : "bg-background"}
+                />
                 <Pencil
-                  className="w-4 h-4 cursor-pointer"
+                  className="w-5 h-5 text-accent cursor-pointer"
                   onClick={() => handleEditToggle("lastName")}
                 />
               </div>
-            )}
-          </div>
+            </div>
 
-          {/* Email */}
-          <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-muted-foreground">
-              Email
-            </label>
-            {isEditing.email ? (
-              <Input
-                name="email"
-                value={profile.email}
-                onChange={handleChange}
-                onBlur={() => handleEditToggle("email")}
-                autoFocus
-              />
-            ) : (
-              <div className="flex items-center gap-2">
-                <span>{profile.email}</span>
+            {/* Email */}
+            <div>
+              <Label htmlFor="email" className="text-sm font-medium">
+                Email
+              </Label>
+              <div className="relative flex items-center gap-2">
+                <Input
+                  id="email"
+                  name="email"
+                  value={profile.email}
+                  onChange={handleChange}
+                  readOnly={!isEditing.email}
+                  className={isEditing.email ? "border-accent" : "bg-background"}
+                />
                 <Pencil
-                  className="w-4 h-4 cursor-pointer"
+                  className="w-5 h-5 text-accent cursor-pointer"
                   onClick={() => handleEditToggle("email")}
                 />
               </div>
-            )}
-          </div>
+            </div>
 
-          {/* Civil ID */}
-          <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-muted-foreground">
-              Civil ID
-            </label>
-            {isEditing.civilId ? (
-              <Input
-                name="civilId"
-                value={profile.civilId}
-                onChange={handleChange}
-                onBlur={() => handleEditToggle("civilId")}
-                autoFocus
-              />
-            ) : (
-              <div className="flex items-center gap-2">
-                <span>{profile.civilId}</span>
-                <Pencil
-                  className="w-4 h-4 cursor-pointer"
-                  onClick={() => handleEditToggle("civilId")}
+            {/* Phone Number */}
+            <div>
+              <Label htmlFor="phoneNumber" className="text-sm font-medium">
+                Phone Number
+              </Label>
+              <div className="relative flex items-center gap-2">
+                <Input
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  value={profile.phoneNumber}
+                  onChange={handleChange}
+                  readOnly={!isEditing.phoneNumber}
+                  className={isEditing.phoneNumber ? "border-accent" : "bg-background"}
                 />
-              </div>
-            )}
-          </div>
-
-          {/* Phone Number */}
-          <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-muted-foreground">
-              Phone Number
-            </label>
-            {isEditing.phoneNumber ? (
-              <Input
-                name="phoneNumber"
-                value={profile.phoneNumber}
-                onChange={handleChange}
-                onBlur={() => handleEditToggle("phoneNumber")}
-                autoFocus
-              />
-            ) : (
-              <div className="flex items-center gap-2">
-                <span>{profile.phoneNumber}</span>
                 <Pencil
-                  className="w-4 h-4 cursor-pointer"
+                  className="w-5 h-5 text-accent cursor-pointer"
                   onClick={() => handleEditToggle("phoneNumber")}
                 />
               </div>
-            )}
+            </div>
+          </div>
+
+          {/* Civil ID */}
+          <div>
+            <Label htmlFor="civilId" className="text-sm font-medium">
+              Civil ID
+            </Label>
+            <div className="relative flex items-center gap-2">
+              <Input
+                id="civilId"
+                name="civilId"
+                value={profile.civilId}
+                onChange={handleChange}
+                readOnly={!isEditing.civilId}
+                className={isEditing.civilId ? "border-accent" : "bg-background"}
+              />
+              <Pencil
+                className="w-5 h-5 text-accent cursor-pointer"
+                onClick={() => handleEditToggle("civilId")}
+              />
+            </div>
           </div>
 
           {/* Save Button */}
-          <Button
-            onClick={handleSave}
-            variant="primary"
-            className="mt-6 w-full"
-          >
+          <Button onClick={handleSave} className="w-full">
             Save Changes
           </Button>
         </div>

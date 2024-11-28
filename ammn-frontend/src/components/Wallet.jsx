@@ -38,6 +38,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { getWallet } from "@/actions/users";
 import { getAllUsers } from "@/actions/users";
 import { myTransactions } from "@/actions/transactions";
+import { TransferDialog } from "@/components/modals/TransferDialog";
 import clsx from "clsx";
 
 export function Wallet() {
@@ -355,95 +356,95 @@ function CopyIcon(props) {
   );
 }
 
-function TransferDialog({ bankAccounts }) {
-  const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [query, setQuery] = useState("");
-  const [isOpen, setIsOpen] = useState(false); // State to control the dialog open/close
+// function TransferDialog({ bankAccounts }) {
+//   const [users, setUsers] = useState([]);
+//   const [isLoading, setIsLoading] = useState(false);
+//   const [query, setQuery] = useState("");
+//   const [isOpen, setIsOpen] = useState(false); // State to control the dialog open/close
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setIsLoading(true);
-      try {
-        const fetchedUsers = await getAllUsers();
-        setUsers(fetchedUsers);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+//   useEffect(() => {
+//     const fetchUsers = async () => {
+//       setIsLoading(true);
+//       try {
+//         const fetchedUsers = await getAllUsers();
+//         setUsers(fetchedUsers);
+//       } catch (error) {
+//         console.error("Error fetching users:", error);
+//       } finally {
+//         setIsLoading(false);
+//       }
+//     };
 
-    fetchUsers();
-  }, []);
+//     fetchUsers();
+//   }, []);
 
-  const filteredFriends = users.filter(
-    (user) =>
-      user.firstName.toLowerCase().includes(query.toLowerCase()) ||
-      user.lastName.toLowerCase().includes(query.toLowerCase()) ||
-      user.email.toLowerCase().includes(query.toLowerCase())
-  );
+//   const filteredFriends = users.filter(
+//     (user) =>
+//       user.firstName.toLowerCase().includes(query.toLowerCase()) ||
+//       user.lastName.toLowerCase().includes(query.toLowerCase()) ||
+//       user.email.toLowerCase().includes(query.toLowerCase())
+//   );
 
-  return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" onClick={() => setIsOpen(true)}>Transfer</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Transfer Funds</DialogTitle>
-          <DialogDescription>Transfer funds between accounts</DialogDescription>
-        </DialogHeader>
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="sender">Sender</Label>
-            <Select>
-              <SelectTrigger id="sender">
-                <SelectValue placeholder="Select Account" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {bankAccounts.map((account, index) => (
-                    <SelectItem key={index} value={account.name}>
-                      {account.name}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label htmlFor="recipient">Recipient</Label>
-            <Select>
-              <SelectTrigger id="recipient">
-                <SelectValue placeholder="Select Account" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {filteredFriends.map((friend, index) => (
-                    <SelectItem key={index} value={friend.id}>
-                      {`${friend.firstName} ${friend.lastName}`}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label htmlFor="amount">Amount</Label>
-            <Input type="number" id="amount" placeholder="Enter amount" />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="button" variant="secondary" onClick={() => setIsOpen(false)}> {/* Close modal on cancel */}
-            Cancel
-          </Button>
-          <Button type="submit">Transfer</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
+//   return (
+//     <Dialog open={isOpen} onOpenChange={setIsOpen}>
+//       <DialogTrigger asChild>
+//         <Button variant="outline" onClick={() => setIsOpen(true)}>Transfer</Button>
+//       </DialogTrigger>
+//       <DialogContent>
+//         <DialogHeader>
+//           <DialogTitle>Transfer Funds</DialogTitle>
+//           <DialogDescription>Transfer funds between accounts</DialogDescription>
+//         </DialogHeader>
+//         <div className="space-y-4">
+//           <div>
+//             <Label htmlFor="sender">Sender</Label>
+//             <Select>
+//               <SelectTrigger id="sender">
+//                 <SelectValue placeholder="Select Account" />
+//               </SelectTrigger>
+//               <SelectContent>
+//                 <SelectGroup>
+//                   {bankAccounts.map((account, index) => (
+//                     <SelectItem key={index} value={account.name}>
+//                       {account.name}
+//                     </SelectItem>
+//                   ))}
+//                 </SelectGroup>
+//               </SelectContent>
+//             </Select>
+//           </div>
+//           <div>
+//             <Label htmlFor="recipient">Recipient</Label>
+//             <Select>
+//               <SelectTrigger id="recipient">
+//                 <SelectValue placeholder="Select Account" />
+//               </SelectTrigger>
+//               <SelectContent>
+//                 <SelectGroup>
+//                   {filteredFriends.map((friend, index) => (
+//                     <SelectItem key={index} value={friend.id}>
+//                       {`${friend.firstName} ${friend.lastName}`}
+//                     </SelectItem>
+//                   ))}
+//                 </SelectGroup>
+//               </SelectContent>
+//             </Select>
+//           </div>
+//           <div>
+//             <Label htmlFor="amount">Amount</Label>
+//             <Input type="number" id="amount" placeholder="Enter amount" />
+//           </div>
+//         </div>
+//         <DialogFooter>
+//           <Button type="button" variant="secondary" onClick={() => setIsOpen(false)}> {/* Close modal on cancel */}
+//             Cancel
+//           </Button>
+//           <Button type="submit">Transfer</Button>
+//         </DialogFooter>
+//       </DialogContent>
+//     </Dialog>
+//   );
+// }
 
 export function CardTransactions({ account, onClose }) {
   return (

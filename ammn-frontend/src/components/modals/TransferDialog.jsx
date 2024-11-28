@@ -20,6 +20,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { getAllUsers } from "@/actions/users";
 import { transfer } from "@/actions/transactions"; // Import the transfer function
+import { useToast } from "@/hooks/use-toast";
 
 export function TransferDialog() {
   const [users, setUsers] = useState([]); // State to store fetched users
@@ -29,6 +30,7 @@ export function TransferDialog() {
     amount: "",
     email: "",
   });
+  const { toast } = useToast(); // Access toast hook
 
   // Fetch users when the component mounts
   useEffect(() => {
@@ -66,7 +68,11 @@ export function TransferDialog() {
   // Handle form submission
   const handleTransferSubmit = async () => {
     if (!transferData.amount || !transferData.email) {
-      alert("Please fill in all fields before transferring.");
+      toast({
+        title: "Error",
+        description: "Please fill in all fields before transferring.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -78,13 +84,29 @@ export function TransferDialog() {
       const success = await transfer(formData); // Call the imported transfer function
 
       if (success) {
-        alert("Transfer successful!");
+        toast({
+          title: "Transfer Successful",
+          description: "Funds have been transferred successfully!",
+        });
+
         console.log("Transfer Data:", Object.fromEntries(formData));
+
+        // Reset transfer data
+        setTransferData({ amount: "", email: "" });
       } else {
-        alert("Transfer failed. Please try again.");
+        toast({
+          title: "Transfer Failed",
+          description: "Transfer failed. Please try again.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Error during transfer:", error);
+      toast({
+        title: "Error",
+        description: "An error occurred during the transfer.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -103,13 +125,6 @@ export function TransferDialog() {
         <Label htmlFor="recipient" className="mt-4">
           Recipient
         </Label>
-        <Input
-          type="text"
-          placeholder="Search friends..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="mb-2"
-        />
         <Select
           onValueChange={(value) => {
             const selectedUser = users.find(
