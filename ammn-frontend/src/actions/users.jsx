@@ -62,12 +62,24 @@ export const findUserByEmail = async (data) =>
       : Promise.reject(`Error finding user: ${response.statusText}`)
   );
 
-export const createGityaAccount = async (accountData) => {
+export const createGityaAccount = async (data) => {
+  // const userData = Object.fromEntries(formData);
+  // const { accountName } = await formData;
+  const { accountName, jointAccountBalance } = data;
+
+  const user = {
+    accountName: accountName,
+    jointAccountBalance: jointAccountBalance,
+  };
+
+  console.log(user);
   const response = await fetch(`${baseUrl}/users/createGityaAccount`, {
     method: "POST",
     headers: await getHeaders(),
-    body: JSON.stringify(accountData),
+    body: JSON.stringify(user),
   });
+
+  // console.log(await response.json());
 
   if (!response.ok) {
     return Promise.reject(`Error creating account: ${response.statusText}`);
@@ -75,5 +87,5 @@ export const createGityaAccount = async (accountData) => {
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/transactions");
   revalidatePath("/users");
-  return response.json();
+  // return await response.json();
 };
