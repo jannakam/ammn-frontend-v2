@@ -9,15 +9,32 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { JoinGatiyaModal } from "@/components/modals/JoinGatiyaAccountModal";
+import { DepositWithdrawModal } from "@/components/modals/DepositWithdrawModal"; // Import the new modal
 
 export function Gatiya() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
+  const [isDepositWithdrawModalOpen, setIsDepositWithdrawModalOpen] = useState(false);
+  const [selectedGatiya, setSelectedGatiya] = useState(null);
   const [gatiyas, setGatiyas] = useState([
     // Initialize with your existing Gatiya accounts from the user's gityaAccountList
   ]);
 
   const handleJoinSuccess = (newGatiyaAccount) => {
     setGatiyas((prevGatiyas) => [...prevGatiyas, newGatiyaAccount]);
+  };
+
+  const openDepositWithdrawModal = (gatiya) => {
+    setSelectedGatiya(gatiya);
+    setIsDepositWithdrawModalOpen(true);
+  };
+
+  const handleTransactionSuccess = (updatedGatiya) => {
+    // Update the gatiya in the list
+    setGatiyas((prevGatiyas) =>
+      prevGatiyas.map((g) =>
+        g.id === updatedGatiya.id ? updatedGatiya : g
+      )
+    );
   };
 
   return (
@@ -27,7 +44,7 @@ export function Gatiya() {
           <CardTitle className="mb-2">Gatiya</CardTitle>
           <CardDescription>One purpose, one wallet</CardDescription>
         </div>
-        <Button variant="outline" onClick={() => setIsModalOpen(true)}>
+        <Button variant="outline" onClick={() => setIsJoinModalOpen(true)}>
           Join by Invite
         </Button>
       </CardHeader>
@@ -38,13 +55,22 @@ export function Gatiya() {
               key={gatiya.id}
               className="border border-muted shadow-sm bg-background"
             >
-              <CardHeader>
-                <CardTitle className="text-lg font-medium">
-                  {gatiya.accountName}
-                </CardTitle>
-                <CardDescription className="text-sm">
-                  Balance: {gatiya.remainingBalance} / {gatiya.jointAccountBalance} KWD
-                </CardDescription>
+              <CardHeader className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg font-medium">
+                    {gatiya.accountName}
+                  </CardTitle>
+                  <CardDescription className="text-sm">
+                    Balance: {gatiya.remainingBalance} / {gatiya.jointAccountBalance} KWD
+                  </CardDescription>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openDepositWithdrawModal(gatiya)}
+                >
+                  Deposit/Withdraw
+                </Button>
               </CardHeader>
               <CardContent className="flex items-end justify-between gap-4">
                 {/* Avatar Group */}
@@ -58,7 +84,7 @@ export function Gatiya() {
                     </Avatar>
                   ))}
                 </div>
-                {/* Created By */}
+                {/* Invite Code */}
                 <p className="text-sm text-muted-foreground">
                   Invite Code:{" "}
                   <span className="text-destructive font-semibold">
@@ -75,10 +101,18 @@ export function Gatiya() {
         )}
       </CardContent>
       <JoinGatiyaModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isJoinModalOpen}
+        onClose={() => setIsJoinModalOpen(false)}
         onJoinSuccess={handleJoinSuccess}
       />
+      {selectedGatiya && (
+        <DepositWithdrawModal
+          isOpen={isDepositWithdrawModalOpen}
+          onClose={() => setIsDepositWithdrawModalOpen(false)}
+          gatiya={selectedGatiya}
+          onTransactionSuccess={handleTransactionSuccess}
+        />
+      )}
     </Card>
   );
 }
