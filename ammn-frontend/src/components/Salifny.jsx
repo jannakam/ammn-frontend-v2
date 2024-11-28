@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { myTransactions } from "@/actions/transactions";
+import { myTransactions, salifnyReturned } from "@/actions/transactions";
 
 export function Salifny() {
   const [transactions, setTransactions] = React.useState([]);
@@ -63,17 +63,23 @@ export function Salifny() {
             </div>
 
             {/* Status Button */}
-            <Button
-              variant="secondary"
-              size="sm"
-              className={
-                transaction.type === "TaslefaTo"
-                  ? "bg-accent"
-                  : "bg-destructive"
-              }
-            >
-              {transaction.type === "TaslefaTo" ? "Pay" : "Ping"}
-            </Button>
+            {transaction.taslefaStatus === "Incomplete" && (
+              <Button
+                variant="secondary"
+                size="sm"
+                className={
+                  transaction.type === "TaslefaTo"
+                    ? "bg-accent"
+                    : "bg-destructive"
+                }
+                onClick={() =>
+                  transaction.type === "TaslefaTo" &&
+                  salifnyReturned(transaction.id)
+                }
+              >
+                {transaction.type === "TaslefaTo" ? "Pay" : "Ping"}
+              </Button>
+            )}
           </div>
         ))}
       </CardContent>

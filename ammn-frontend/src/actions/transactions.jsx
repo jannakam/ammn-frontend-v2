@@ -145,3 +145,21 @@ export const joinGatiyaAccount = async (inviteCode) => {
     throw error;
   }
 };
+export const salifnyReturned = async (id) => {
+  const data = { id: id };
+  console.log(data);
+  try {
+    const response = await fetch(`${baseUrl}/wallet/transactions/completed`, {
+      method: "PUT",
+      headers: await getHeaders(),
+      body: JSON.stringify(data),
+    });
+
+    // revalidatePath("/dashboard");
+    // revalidatePath("/dashboard/transactions");
+    return response.ok;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
