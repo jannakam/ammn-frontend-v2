@@ -155,7 +155,7 @@ export const salifnyReturned = async (id) => {
       body: JSON.stringify(data),
     });
 
-    // revalidatePath("/dashboard");
+    revalidatePath("/dashboard");
     // revalidatePath("/dashboard/transactions");
     return response.ok;
   } catch (error) {
