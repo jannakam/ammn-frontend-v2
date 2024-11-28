@@ -63,7 +63,7 @@ export const findUserByEmail = async (data) =>
   );
 
 export const createGityaAccount = async (accountData) => {
-  const response = await fetch(`${baseUrl}/users/createGityaAcount`, {
+  const response = await fetch(`${baseUrl}/users/createGityaAccount`, {
     method: "POST",
     headers: await getHeaders(),
     body: JSON.stringify(accountData),
