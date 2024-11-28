@@ -164,18 +164,23 @@ export const salifnyReturned = async (id) => {
   }
 };
 export const addUsersToAccount = async (data) => {
-  // const data = { };
   const { email, accountName } = data;
   const user = { email: email, accountName: accountName };
-  console.log(data);
+  console.log(user);
   try {
-    const response = await fetch(`${baseUrl}/users/join`, {
+    const response = await fetch(`${baseUrl}/users/addUserToAccount`, {
       method: "POST",
       headers: await getHeaders(),
       body: JSON.stringify(user), // Send the object as JSON
     });
 
-    // Parse the response data
+    // if (!response.ok) {
+    //   const errorData = await response.json();
+    //   throw new Error(errorData.message || response.statusText);
+    // }
+
+    // const newGatiyaAccount = await response.json(); // Parse the response data
+    // return newGatiyaAccount; // Return the Gatiya account data
   } catch (error) {
     console.error("Error in joinGatiyaAccount:", error);
     throw error;

@@ -65,6 +65,9 @@ export const findUserByEmail = async (data) =>
 export const createGityaAccount = async (data) => {
   // const userData = Object.fromEntries(formData);
   // const { accountName } = await formData;
+
+  console.log(data);
+
   const { accountName, jointAccountBalance } = data;
 
   const user = {
