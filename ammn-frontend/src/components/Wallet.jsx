@@ -217,9 +217,9 @@ export function Wallet() {
                     <div className="flex flex-row justify-between items-end">
                       <TransferDialog bankAccounts={bankAccounts} />
 
-                      <div className="flex flex-col">
+                      <div className="flex flex-col gap-2">
                       <Button
-                        variant="ghost"
+                        variant="outline"
                         size="sm"
                         onClick={toggleWalletTransactions}
                       >
@@ -228,7 +228,7 @@ export function Wallet() {
 
                       <Button
                         disabled={selectedAccount === null}
-                        variant="ghost"
+                        variant="outline"
                         size="sm"
                         onClick={() => toggleTransactions(selectedAccount)}
                       >
